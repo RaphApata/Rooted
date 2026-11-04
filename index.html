@@ -1,0 +1,2110 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Rooted</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=Work+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: oklch(98% 0.012 80);
+    --surface: oklch(100% 0 0);
+    --surface-alt: oklch(96% 0.016 80);
+    --ink: oklch(23% 0.02 80);
+    --ink-soft: oklch(48% 0.02 80);
+    --ink-faint: oklch(64% 0.015 80);
+    --border: oklch(89% 0.015 80);
+    --accent: oklch(58% 0.14 45);
+    --accent-ink: oklch(32% 0.1 45);
+    --accent-soft: oklch(94% 0.03 45);
+    --accent-2: oklch(52% 0.08 210);
+    --accent-2-ink: oklch(30% 0.06 210);
+    --accent-2-soft: oklch(93% 0.02 210);
+    --accent-3: oklch(52% 0.09 145);
+    --accent-3-ink: oklch(30% 0.07 145);
+    --accent-3-soft: oklch(93% 0.02 145);
+    --tree-canopy: oklch(46% 0.11 145);
+    --tree-trunk: oklch(32% 0.04 60);
+    --tree-bg: oklch(94% 0.025 145);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: oklch(20% 0.015 80);
+      --surface: oklch(25% 0.015 80);
+      --surface-alt: oklch(28% 0.015 80);
+      --ink: oklch(93% 0.01 80);
+      --ink-soft: oklch(75% 0.012 80);
+      --ink-faint: oklch(58% 0.012 80);
+      --border: oklch(35% 0.015 80);
+      --accent-soft: oklch(30% 0.06 45);
+      --accent-2-soft: oklch(28% 0.04 210);
+      --accent-3-soft: oklch(28% 0.04 145);
+      --tree-bg: oklch(26% 0.03 145);
+      --accent-ink: oklch(84% 0.08 45);
+      --accent-2-ink: oklch(84% 0.05 210);
+      --accent-3-ink: oklch(84% 0.06 145);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: oklch(20% 0.015 80);
+    --surface: oklch(25% 0.015 80);
+    --surface-alt: oklch(28% 0.015 80);
+    --ink: oklch(93% 0.01 80);
+    --ink-soft: oklch(75% 0.012 80);
+    --ink-faint: oklch(58% 0.012 80);
+    --border: oklch(35% 0.015 80);
+    --accent-soft: oklch(30% 0.06 45);
+    --accent-2-soft: oklch(28% 0.04 210);
+    --accent-3-soft: oklch(28% 0.04 145);
+    --tree-bg: oklch(26% 0.03 145);
+    --accent-ink: oklch(84% 0.08 45);
+    --accent-2-ink: oklch(84% 0.05 210);
+    --accent-3-ink: oklch(84% 0.06 145);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: "Work Sans", system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+  a { color: var(--accent-ink); text-decoration: none; }
+  a:hover { color: var(--accent); }
+  .serif { font-family: "Newsreader", Georgia, serif; }
+  button { font-family: inherit; cursor: pointer; }
+  @keyframes growIn { from { opacity:0; transform: scale(.8) translateY(8px); } to { opacity:1; transform: scale(1) translateY(0); } }
+  .tree-part { opacity:0; transform-origin: center; }
+  .tree-part.tree-visible { animation: growIn .8s ease forwards; }
+  input, textarea { font-family: inherit; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:8px; font-size:14px; font-weight:500; border:none; white-space:nowrap; }
+  .btn-primary { background:var(--accent); color:white; }
+  .btn-primary:hover { opacity:.92; }
+  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+  .btn-ghost { background:var(--surface); border:1px solid var(--border); color:var(--ink); }
+  .btn-ghost:hover { background:var(--surface-alt); }
+  .chip { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:999px; background:var(--accent-soft); color:var(--accent-ink); font-size:13px; cursor:pointer; border:none; }
+  .chip-remove { background:none; border:none; color:inherit; opacity:.6; cursor:pointer; font-size:13px; line-height:1; padding:0; }
+  .chip-remove:hover { opacity:1; }
+  .chip-add { background:var(--surface); border:1px dashed var(--border); color:var(--ink-faint); }
+  .chip-add:hover { color:var(--ink-soft); border-color:var(--ink-faint); }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px; }
+  .nav-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; color:var(--ink-soft); font-size:14px; border:none; background:none; width:100%; text-align:left; }
+  .nav-item.active { background:var(--accent-soft); color:var(--accent-ink); font-weight:500; }
+  .nav-item:hover:not(.active) { background:var(--surface-alt); }
+  .section { display:none; flex:1; padding:44px 56px; flex-direction:column; gap:24px; max-width:900px; }
+  .section.active { display:flex; }
+  .section.wide { max-width:1080px; }
+  .log-grid { display:flex; flex-direction:column; gap:24px; }
+  .log-grid-left { display:flex; flex-direction:column; gap:24px; min-width:0; }
+  .log-grid-right { display:flex; flex-direction:column; }
+  @media (min-width: 760px) {
+    .log-grid { flex-direction:row; align-items:flex-start; gap:28px; }
+    .log-grid-left { flex:1; min-width:0; }
+    .log-grid-right { width:260px; flex-shrink:0; position:sticky; top:24px; }
+  }
+  .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
+  .overlay.active { display:flex; }
+  .modal { background:var(--surface); border-radius:14px; padding:26px; max-width:560px; width:100%; max-height:80vh; overflow:auto; }
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--bg); padding:10px 20px; border-radius:8px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .25s; z-index:100; }
+  .toast.show { opacity:1; }
+  .footer { margin-top:40px; padding:18px 0 4px; border-top:1px solid var(--border); font-size:12px; color:var(--ink-faint); text-align:center; }
+  ::placeholder { color: var(--ink-faint); }
+  textarea { resize:vertical; }
+
+  .nav-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); margin-left:auto; flex-shrink:0; }
+  .eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; font-weight:600; color:var(--ink-faint); }
+  .row-wrap { display:flex; gap:8px; flex-wrap:wrap; }
+  .companion-note h2 { margin:6px 0 0; font-size:22px; font-weight:600; line-height:1.25; text-wrap:balance; }
+  .companion-note > p { margin:10px 0 0; font-size:14px; line-height:1.65; color:var(--ink-soft); max-width:62ch; }
+  .companion-note .noticed { font-size:13px; }
+  .companion-note .noticed strong { color:var(--ink); font-weight:600; }
+  .suggest-box { margin-top:16px; padding:16px; border-radius:10px; background:var(--accent-3-soft); display:flex; flex-direction:column; gap:10px; }
+  .suggest-reason { font-size:13px; line-height:1.55; color:var(--ink-soft); max-width:60ch; }
+  .status-line { font-size:13px; color:var(--accent-3-ink); font-weight:500; }
+  .step-list { margin:10px 0 0; padding-left:22px; display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-soft); }
+  .step-list li.pending { color:var(--ink-faint); font-style:italic; }
+  .companion-note details summary { cursor:pointer; font-size:13px; font-weight:500; color:var(--accent-ink); margin-top:16px; }
+  details.earlier summary { cursor:pointer; display:flex; justify-content:space-between; gap:12px; font-size:14px; font-weight:500; list-style:none; }
+  details.earlier summary::-webkit-details-marker { display:none; }
+  .earlier-date { font-size:12px; color:var(--ink-faint); font-weight:400; flex-shrink:0; }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+  .btn:focus-visible, .chip:focus-visible, .nav-item:focus-visible, summary:focus-visible { outline:2px solid var(--accent-2); outline-offset:2px; }
+  @keyframes pulse { 0%,100% { opacity:.35; } 50% { opacity:1; } }
+  .thinking-dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--accent-2); animation:pulse 1.4s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .thinking-dot { animation:none; }
+    .tree-part.tree-visible { animation:none; opacity:1; }
+  }
+
+  #mobileTopbar { display:none; }
+  #sidebarBackdrop { display:none; }
+  #sidebar { position:sticky; }
+  .welcome-banner { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+  .vocation-grid { display:grid; grid-template-columns: 1fr; gap:16px; }
+  @media (min-width: 560px) { .vocation-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (min-width: 820px) { .vocation-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+  @media (max-width: 759px) {
+    #app { display:block !important; }
+    #mobileTopbar {
+      display:flex; align-items:center; gap:12px; padding:14px 16px;
+      background:var(--surface); border-bottom:1px solid var(--border);
+      position:sticky; top:0; z-index:40;
+    }
+    #hamburgerBtn { background:none; border:none; padding:6px; margin:-6px; color:var(--ink); cursor:pointer; display:flex; }
+    #sidebar {
+      position:fixed; top:0; left:0; height:100vh; width:240px; max-width:80vw;
+      transform:translateX(-100%); transition:transform .25s ease; z-index:60;
+      box-shadow:2px 0 16px rgba(0,0,0,0.18);
+    }
+    #sidebar.open { transform:translateX(0); }
+    #sidebarBackdrop.open {
+      display:block; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:55;
+    }
+    .section { padding:24px 18px; max-width:100% !important; }
+  }
+</style>
+
+<div id="app" style="display:flex; min-height:100vh;">
+
+  <div id="sidebarBackdrop"></div>
+
+  <!-- Mobile top bar -->
+  <div id="mobileTopbar">
+    <button id="hamburgerBtn" aria-label="Open menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <img src="logo.png" alt="Rooted" width="22" height="22" style="border-radius:50%; object-fit:cover;">
+    <span class="serif" style="font-size:17px; font-weight:600;">Rooted</span>
+  </div>
+
+  <!-- Sidebar -->
+  <div id="sidebar" style="width:220px; flex-shrink:0; background:var(--surface); border-right:1px solid var(--border); padding:28px 20px; display:flex; flex-direction:column; gap:32px; top:0; height:100vh;">
+    <div style="display:flex; align-items:center; gap:10px; padding:0 4px;">
+      <img src="logo.png" alt="Rooted" width="28" height="28" style="border-radius:50%; object-fit:cover; flex-shrink:0;">
+      <span class="serif" style="font-size:20px; font-weight:600; letter-spacing:0.2px;">Rooted</span>
+    </div>
+
+    <nav style="display:flex; flex-direction:column; gap:4px;" id="nav"></nav>
+
+    <div style="margin-top:auto; display:flex; align-items:center; gap:10px; padding:10px 4px; border-top:1px solid var(--border); padding-top:16px;">
+      <div id="avatarBadge" style="width:28px; height:28px; border-radius:50%; background:var(--accent-2-soft); color:var(--accent-2-ink); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600;">?</div>
+      <span id="sidebarName" style="font-size:13px; color:var(--ink-soft);">Friend</span>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div style="flex:1; display:flex; flex-direction:column; min-width:0;">
+    <div id="sections" style="display:flex; flex:1;"></div>
+  </div>
+</div>
+
+<div class="overlay" id="verseOverlay">
+  <div class="modal">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+      <div class="serif" id="verseRef" style="font-size:18px; font-weight:600;"></div>
+      <button class="btn-ghost btn" style="padding:4px 10px;" onclick="closeVerse()">✕</button>
+    </div>
+    <p id="verseText" class="serif" style="font-size:16px; line-height:1.65; margin:14px 0; font-style:italic;"></p>
+    <a id="verseFullLink" target="_blank" rel="noopener" style="font-size:13px; font-weight:500;">Read the full passage →</a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================= DATA ============================= */
+
+const VERSES = {
+  "Jeremiah 32:17": "Ah Lord GOD! behold, thou hast made the heaven and the earth by thy great power and stretched out arm, and there is nothing too hard for thee.",
+  "Jeremiah 32:27": "Behold, I am the LORD, the God of all flesh: is there any thing too hard for me?",
+  "Ecclesiastes 11:1": "Cast thy bread upon the waters: for thou shalt find it after many days.",
+  "Matthew 25:21": "His lord said unto him, Well done, thou good and faithful servant: thou hast been faithful over a few things, I will make thee ruler over many things: enter thou into the joy of thy lord.",
+  "Proverbs 15:22": "Without counsel purposes are disappointed: but in the multitude of counsellors they are established.",
+  "Exodus 31:3": "And I have filled him with the spirit of God, in wisdom, and in understanding, and in knowledge, and in all manner of workmanship.",
+  "Jeremiah 33:3": "Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.",
+  "Proverbs 4:7": "Wisdom is the principal thing; therefore get wisdom: and with all thy getting get understanding.",
+  "1 Kings 4:29": "And God gave Solomon wisdom and understanding exceeding much, and largeness of heart, even as the sand that is on the sea shore.",
+  "Exodus 18:17": "And Moses' father in law said unto him, The thing that thou doest is not good.",
+  "Judges 7:2": "And the LORD said unto Gideon, The people that are with thee are too many for me to give the Midianites into their hands, lest Israel vaunt themselves against me, saying, Mine own hand hath saved me.",
+  "Jeremiah 8:22": "Is there no balm in Gilead; is there no physician there? why then is not the health of the daughter of my people recovered?",
+  "Daniel 9:2": "In the first year of his reign I Daniel understood by books the number of the years, whereof the word of the LORD came to Jeremiah the prophet, that he would accomplish seventy years in the desolations of Jerusalem.",
+  "Daniel 5:12": "Forasmuch as an excellent spirit, and knowledge, and understanding... were found in the same Daniel.",
+  "1 Corinthians 9:24": "Know ye not that they which run in a race run all, but one receiveth the prize? So run, that ye may obtain.",
+  "Psalm 18:34": "He teacheth my hands to war, so that a bow of steel is broken by mine arms.",
+  "2 Samuel 23:8": "These be the names of the mighty men whom David had...",
+  "Ecclesiastes 9:10": "Whatsoever thy hand findeth to do, do it with thy might; for there is no work, nor device, nor knowledge, nor wisdom, in the grave, whither thou goest.",
+  "Proverbs 15:17": "Better is a dinner of herbs where love is, than a stalled ox and hatred therewith.",
+  "1 Kings 3:9": "Give therefore thy servant an understanding heart to judge thy people, that I may discern between good and bad: for who is able to judge this thy so great a people?",
+  "Psalm 90:12": "So teach us to number our days, that we may apply our hearts unto wisdom.",
+  "Proverbs 3:5": "Trust in the LORD with all thine heart; and lean not unto thine own understanding.",
+  "Colossians 3:23": "And whatsoever ye do, do it heartily, as to the Lord, and not unto men.",
+  "John 3:16": "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",
+  "Romans 8:28": "And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",
+  "Psalm 23:1": "The LORD is my shepherd; I shall not want.",
+  "Philippians 4:13": "I can do all things through Christ which strengtheneth me.",
+  "Jeremiah 29:11": "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",
+  "Proverbs 16:3": "Commit thy works unto the LORD, and thy thoughts shall be established.",
+  "Isaiah 41:10": "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee.",
+  "Matthew 6:33": "But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.",
+  "James 1:5": "If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him."
+};
+
+function bgLink(ref){ return "https://www.biblegateway.com/passage/?search=" + encodeURIComponent(ref) + "&version=KJV"; }
+
+/* ---- Full offline Bible (bundled, public-domain King James Version) ---- */
+/* Text source: https://github.com/aruljohn/Bible-kjv (KJV text is public domain; JSON packaging MIT-licensed). */
+
+const BOOKS = ["Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"];
+
+const BOOK_ALIASES = {
+  "gen":"Genesis","ge":"Genesis","gn":"Genesis",
+  "exo":"Exodus","exod":"Exodus","ex":"Exodus",
+  "lev":"Leviticus","le":"Leviticus","lv":"Leviticus",
+  "num":"Numbers","nu":"Numbers","nm":"Numbers","numb":"Numbers",
+  "deut":"Deuteronomy","de":"Deuteronomy","dt":"Deuteronomy",
+  "josh":"Joshua","jos":"Joshua","jsh":"Joshua",
+  "judg":"Judges","jdg":"Judges","jg":"Judges","jdgs":"Judges",
+  "rut":"Ruth","ru":"Ruth",
+  "1 sam":"1 Samuel","1sam":"1 Samuel","1sa":"1 Samuel","i sam":"1 Samuel","1st samuel":"1 Samuel",
+  "2 sam":"2 Samuel","2sam":"2 Samuel","2sa":"2 Samuel","ii sam":"2 Samuel","2nd samuel":"2 Samuel",
+  "1 kgs":"1 Kings","1kgs":"1 Kings","1ki":"1 Kings","i kings":"1 Kings","1kings":"1 Kings",
+  "2 kgs":"2 Kings","2kgs":"2 Kings","2ki":"2 Kings","ii kings":"2 Kings","2kings":"2 Kings",
+  "1 chron":"1 Chronicles","1chron":"1 Chronicles","1chr":"1 Chronicles","1ch":"1 Chronicles","1chronicles":"1 Chronicles",
+  "2 chron":"2 Chronicles","2chron":"2 Chronicles","2chr":"2 Chronicles","2ch":"2 Chronicles","2chronicles":"2 Chronicles",
+  "ezr":"Ezra",
+  "neh":"Nehemiah","ne":"Nehemiah",
+  "esth":"Esther","est":"Esther","es":"Esther",
+  "jb":"Job",
+  "ps":"Psalms","psa":"Psalms","psalm":"Psalms","pslm":"Psalms","psm":"Psalms",
+  "prov":"Proverbs","pro":"Proverbs","prv":"Proverbs","pr":"Proverbs",
+  "eccl":"Ecclesiastes","eccles":"Ecclesiastes","ecc":"Ecclesiastes","ec":"Ecclesiastes","qoh":"Ecclesiastes",
+  "song":"Song of Solomon","sos":"Song of Solomon","song of songs":"Song of Solomon","canticles":"Song of Solomon",
+  "isa":"Isaiah","is":"Isaiah",
+  "jer":"Jeremiah","je":"Jeremiah","jr":"Jeremiah",
+  "lam":"Lamentations","la":"Lamentations",
+  "ezek":"Ezekiel","eze":"Ezekiel","ezk":"Ezekiel",
+  "dan":"Daniel","da":"Daniel","dn":"Daniel",
+  "hos":"Hosea","ho":"Hosea",
+  "jl":"Joel",
+  "am":"Amos",
+  "obad":"Obadiah","ob":"Obadiah",
+  "jnh":"Jonah","jon":"Jonah",
+  "mic":"Micah","mc":"Micah",
+  "nah":"Nahum","na":"Nahum",
+  "hab":"Habakkuk","hb":"Habakkuk",
+  "zeph":"Zephaniah","zep":"Zephaniah","zp":"Zephaniah",
+  "hag":"Haggai","hg":"Haggai",
+  "zech":"Zechariah","zec":"Zechariah","zc":"Zechariah",
+  "mal":"Malachi","ml":"Malachi",
+  "matt":"Matthew","mat":"Matthew","mt":"Matthew",
+  "mrk":"Mark","mk":"Mark","mr":"Mark",
+  "luk":"Luke","lk":"Luke",
+  "joh":"John","jhn":"John","jn":"John",
+  "act":"Acts","ac":"Acts",
+  "rom":"Romans","ro":"Romans","rm":"Romans",
+  "1 cor":"1 Corinthians","1cor":"1 Corinthians","1co":"1 Corinthians","1corinthians":"1 Corinthians",
+  "2 cor":"2 Corinthians","2cor":"2 Corinthians","2co":"2 Corinthians","2corinthians":"2 Corinthians",
+  "gal":"Galatians","ga":"Galatians",
+  "eph":"Ephesians",
+  "phil":"Philippians","php":"Philippians","pp":"Philippians",
+  "col":"Colossians",
+  "1 thess":"1 Thessalonians","1thess":"1 Thessalonians","1th":"1 Thessalonians","1thessalonians":"1 Thessalonians",
+  "2 thess":"2 Thessalonians","2thess":"2 Thessalonians","2th":"2 Thessalonians","2thessalonians":"2 Thessalonians",
+  "1 tim":"1 Timothy","1tim":"1 Timothy","1ti":"1 Timothy","1timothy":"1 Timothy",
+  "2 tim":"2 Timothy","2tim":"2 Timothy","2ti":"2 Timothy","2timothy":"2 Timothy",
+  "tit":"Titus","ti":"Titus",
+  "philem":"Philemon","phm":"Philemon","pm":"Philemon",
+  "heb":"Hebrews",
+  "jas":"James","jm":"James",
+  "1 pet":"1 Peter","1pet":"1 Peter","1pe":"1 Peter","1peter":"1 Peter",
+  "2 pet":"2 Peter","2pet":"2 Peter","2pe":"2 Peter","2peter":"2 Peter",
+  "1 jn":"1 John","1jn":"1 John","1jo":"1 John","1john":"1 John",
+  "2 jn":"2 John","2jn":"2 John","2jo":"2 John","2john":"2 John",
+  "3 jn":"3 John","3jn":"3 John","3jo":"3 John","3john":"3 John",
+  "jud":"Jude",
+  "rev":"Revelation","re":"Revelation","revelations":"Revelation"
+};
+
+let BIBLE = null;
+let bibleLoadFailed = false;
+const bibleReadyPromise = fetch("kjv-compact.json")
+  .then(r => { if(!r.ok) throw new Error("status " + r.status); return r.json(); })
+  .then(data => { BIBLE = data; })
+  .catch(e => { console.warn("Full Bible text failed to load:", e); bibleLoadFailed = true; });
+
+function parseReference(raw){
+  if(!raw) return null;
+  const m = raw.trim().match(/^(\d?\s?[A-Za-z][A-Za-z\s]*?)\.?\s+(\d+)\s*(?::\s*(\d+)\s*(?:[-–]\s*(\d+))?)?\s*$/);
+  if(!m) return null;
+  const chapter = parseInt(m[2], 10);
+  const vStart = m[3] ? parseInt(m[3], 10) : null;
+  const vEnd = m[4] ? parseInt(m[4], 10) : null;
+  const key = m[1].toLowerCase().replace(/\./g, "").replace(/\s+/g, " ").trim();
+  let book = BOOK_ALIASES[key];
+  if(!book){
+    const compact = key.replace(/\s+/g, "");
+    book = BOOKS.find(b => b.toLowerCase().replace(/\s+/g, "") === compact) || null;
+  }
+  if(!book) return null;
+  return { book, chapter, vStart, vEnd };
+}
+
+function formatVerseHTML(book, chapter, vStart, vEnd){
+  const chapterArr = BIBLE && BIBLE[book] && BIBLE[book][chapter - 1];
+  if(!chapterArr) return null;
+  const numTag = n => `<sup style="font-size:10px; color:var(--ink-faint); margin-right:2px;">${n}</sup>`;
+  if(vStart == null){
+    return chapterArr.map((t, i) => numTag(i + 1) + escapeHtml(t)).join(" ");
+  }
+  const end = vEnd || vStart;
+  const out = [];
+  for(let v = vStart; v <= end; v++){
+    if(chapterArr[v - 1]) out.push(numTag(v) + escapeHtml(chapterArr[v - 1]));
+  }
+  return out.length ? out.join(" ") : null;
+}
+
+const VOCATIONS = [
+  { id:"sales", name:"Sales", refShort:"Jeremiah 32:1–22", refs:["Jeremiah 32:17","Jeremiah 32:27"], full:"Jeremiah 32:1-22",
+    blurb:"Buying a field in a besieged land — trusting a promise before you can see how it closes.",
+    icon:'<path d="M4 19V5"/><path d="M4 19h16"/><path d="M7.5 15l3.5-4 2.5 2.5L18 8"/>' },
+  { id:"finance", name:"Finance · Banking", refShort:"Eccl. 11:1–6 · Matt 25 · Prov 15:22", refs:["Ecclesiastes 11:1","Matthew 25:21","Proverbs 15:22"], full:"Ecclesiastes 11:1-6",
+    blurb:"Bread cast on the water, the parable of the talents, and wisdom in many counselors.",
+    icon:'<ellipse cx="12" cy="7" rx="7" ry="3"/><path d="M5 7v10c0 1.7 3.1 3 7 3s7-1.3 7-3V7"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/>' },
+  { id:"builder", name:"Builder · Engineer", refShort:"Exodus 31:1–6", refs:["Exodus 31:3"], full:"Exodus 31:1-6",
+    blurb:"Bezalel and Oholiab, filled with the Spirit for the skilled work of their hands.",
+    icon:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2Z"/>' },
+  { id:"technology", name:"Technology", refShort:"Proverbs 8:12", refs:["Proverbs 8:12"], full:"Proverbs 8:12",
+    blurb:"Wisdom dwells with prudence and finds out knowledge of witty inventions — ingenuity as a gift, used with care.",
+    icon:'<path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/><path d="M13.5 5l-3 14"/>' },
+  { id:"creative", name:"Creative", refShort:"Jer 33:3 · Prov 4:7 · 1 Kings 4:29–35", refs:["Jeremiah 33:3","Proverbs 4:7","1 Kings 4:29"], full:"1 Kings 4:29-35",
+    blurb:"Calling out and being answered with hidden things, prizing wisdom above all, and Solomon's God-given breadth — thousands of proverbs and songs.",
+    icon:'<path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6.5 6.5 0 0 0-3.8 11.8c.6.45.8 1 .8 1.7v.5h6v-.5c0-.7.2-1.25.8-1.7A6.5 6.5 0 0 0 12 3Z"/>' },
+  { id:"marketing", name:"Marketing · Social Media", refShort:"Mark 1:35–37 · Song of Solomon 1:3", refs:["Mark 1:35-37","Song of Solomon 1:3"], full:"Mark 1:35-37",
+    blurb:"Jesus slips away to pray while everyone is looking for him, and a good name is like perfume poured out — influence kept honest and prayerful.",
+    icon:'<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1Z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M18 7a7 7 0 0 1 0 10"/>' },
+  { id:"management", name:"Management · Leadership", refShort:"Exodus 18:13–26 · Judges 7:2–7 · Esther 4:14", refs:["Exodus 18:17","Judges 7:2","Esther 4:14"], full:"Exodus 18:13-26",
+    blurb:"Moses learns to delegate, Gideon learns to choose the right few, and Esther steps up \u201cfor such a time as this.\u201d",
+    icon:'<circle cx="12" cy="5" r="2.1"/><path d="M12 7.1V12"/><circle cx="6" cy="18" r="2.1"/><circle cx="18" cy="18" r="2.1"/><path d="M12 12 6.8 16.2"/><path d="M12 12l5.2 4.2"/>' },
+  { id:"healthcare", name:"Healthcare", refShort:"Jeremiah 8:22", refs:["Jeremiah 8:22"], full:"Jeremiah 8:22",
+    blurb:'"Is there no balm in Gilead?" — a cry for healing where it\'s desperately needed.',
+    icon:'<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8"/><path d="M8 12h8"/>' },
+  { id:"education", name:"Education", refShort:"Daniel 9:2 · Daniel 5:11–12", refs:["Daniel 9:2","Daniel 5:12"], full:"Daniel 9:2",
+    blurb:"Daniel searches the scriptures for understanding, known for wisdom beyond his years.",
+    icon:'<path d="M12 5 3 9l9 4 9-4Z"/><path d="M7 11v4c0 1.5 2.5 3 5 3s5-1.5 5-3v-4"/>' },
+  { id:"sports", name:"Sports · Athlete · Combat", refShort:"1 Cor 9:24–27 · Ps 18:32–36 · 2 Sam 23:8–39", refs:["1 Corinthians 9:24","Psalm 18:34","2 Samuel 23:8"], full:"1 Corinthians 9:24-27",
+    blurb:"Running to win, hands trained for battle, and the exploits of David's mighty men.",
+    icon:'<path d="M5 8v8"/><path d="M3 10v4"/><path d="M19 8v8"/><path d="M21 10v4"/><path d="M8 12h8"/>' },
+  { id:"food", name:"Food & Service", refShort:"Eccl. 9:10 · Prov 15:17", refs:["Ecclesiastes 9:10","Proverbs 15:17"], full:"Ecclesiastes 9:10",
+    blurb:"Whatever your hand finds to do, do it with all your might — even a humble meal, served in love.",
+    icon:'<path d="M6 2v8"/><path d="M4 2v4a2 2 0 0 0 2 2"/><path d="M8 2v4a2 2 0 0 1-2 2"/><path d="M6 12v10"/><path d="M17 2c-1.5 0-3 1.5-3 5s1.5 5 3 5"/><path d="M17 12v10"/>' },
+  { id:"legal", name:"Legal", refShort:"1 Kings 3:9", refs:["1 Kings 3:9"], full:"1 Kings 3:9",
+    blurb:"Solomon asks for a discerning heart, to judge rightly between right and wrong.",
+    icon:'<path d="M12 3v18"/><path d="M5 7h6"/><path d="M13 7h6"/><path d="M5 7 2 13a3 3 0 0 0 6 0Z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0Z"/>' },
+  { id:"other", name:"Other · Still deciding", refShort:"Proverbs 18:18 · Proverbs 3:5–6", refs:["Proverbs 18:18","Proverbs 3:5-6"], full:"Proverbs 3:5-6",
+    blurb:"Not sure where you fit yet? Trust the Lord with all your heart, and bring the choices that need settling to him.",
+    icon:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7"/><path d="M12 17h.01"/>' }
+];
+
+const RESOURCES = {
+  finance: {
+    books: [
+      { title:"Money, Possessions, and Eternity", author:"Randy Alcorn", blurb:"A comprehensive, biblically grounded look at stewardship, generosity and eternal perspective on wealth.", link:"https://www.amazon.co.uk/s?k=Money+Possessions+and+Eternity+Randy+Alcorn" },
+      { title:"The Treasure Principle", author:"Randy Alcorn", blurb:"A short, focused read on giving as the pathway to joy and eternal investment.", link:"https://www.amazon.co.uk/s?k=The+Treasure+Principle+Randy+Alcorn" },
+      { title:"Business for the Glory of God", author:"Wayne Grudem", blurb:"A theology of work, ownership, money and profit for those building or working in business.", link:"https://www.amazon.co.uk/s?k=Business+for+the+Glory+of+God+Wayne+Grudem" },
+      { title:"The Blessed Life", author:"Robert Morris", blurb:"On generosity, tithing and trusting God with finances, from personal testimony and scripture.", link:"https://www.amazon.co.uk/s?k=The+Blessed+Life+Robert+Morris" },
+      { title:"Your Money Counts", author:"Howard Dayton", blurb:"A practical, faith-based guide to budgeting, debt and financial decision-making.", link:"https://www.amazon.co.uk/s?k=Your+Money+Counts+Howard+Dayton" }
+    ],
+    mentors: [
+      { name:"C12 Group", desc:"Christian CEO & executive peer groups.", link:"https://www.joinc12.com" },
+      { name:"Halftime Institute", desc:"Helping leaders move from success to significance.", link:"https://halftime.org" },
+      { name:"Marketplace Chaplains", desc:"Workplace chaplaincy and care for employees.", link:"https://www.mchapusa.com" }
+    ]
+  },
+  sales: {
+    books: [
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"Connects the daily grind of work — including the pressure of a sale — to God's own creative and redemptive work.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"God Is My CEO", author:"Larry Julian", blurb:"Practical, faith-based decision-making for the pressure points of business and sales targets.", link:"https://www.amazon.co.uk/s?k=God+Is+My+CEO+Larry+Julian" },
+      { title:"Integrity Selling for the 21st Century", author:"Ron Willingham", blurb:"A values-based approach to selling built on character and trust rather than closing tactics.", link:"https://www.amazon.co.uk/s?k=Integrity+Selling+for+the+21st+Century+Ron+Willingham" },
+      { title:"The Call", author:"Os Guinness", blurb:"On discovering purpose in everyday work, including the pursuit of an honest sale.", link:"https://www.amazon.co.uk/s?k=The+Call+Os+Guinness" },
+      { title:"Business for the Glory of God", author:"Wayne Grudem", blurb:"A theology of business, profit and honest persuasion for those who sell for a living.", link:"https://www.amazon.co.uk/s?k=Business+for+the+Glory+of+God+Wayne+Grudem" }
+    ],
+    mentors: [
+      { name:"C12 Group", desc:"Christian CEO & executive peer groups.", link:"https://www.joinc12.com" },
+      { name:"Halftime Institute", desc:"Helping leaders move from success to significance.", link:"https://halftime.org" },
+      { name:"Marketplace Chaplains", desc:"Workplace chaplaincy and care for employees.", link:"https://www.mchapusa.com" }
+    ]
+  },
+  builder: {
+    books: [
+      { title:"A Christian Field Guide to Technology for Engineers and Designers", author:"Derek C. Schuurman", blurb:"A framework for thinking Christianly about the technology and design choices you make at work.", link:"https://www.amazon.co.uk/s?k=Christian+Field+Guide+to+Technology+Schuurman" },
+      { title:"Christians on the Job", author:"David Goetsch", blurb:"Practical guidance for living out your faith without compromise in technical and trade work.", link:"https://www.amazon.co.uk/s?k=Christians+on+the+Job+David+Goetsch" },
+      { title:"Work Matters", author:"Tom Nelson", blurb:"Connects Sunday worship to the meaning of Monday's craftsmanship and building.", link:"https://www.amazon.co.uk/s?k=Work+Matters+Tom+Nelson" },
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work as participation in God's ongoing creative and redemptive work in the world.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"The Call", author:"Os Guinness", blurb:"On discovering purpose and calling in the work of your hands.", link:"https://www.amazon.co.uk/s?k=The+Call+Os+Guinness" }
+    ],
+    mentors: [
+      { name:"Christian Engineering Society", desc:"A professional community for Christians in engineering.", link:"https://www.christianengineering.org" },
+      { name:"Marketplace Chaplains", desc:"Workplace chaplaincy and care for employees.", link:"https://www.mchapusa.com" }
+    ]
+  },
+  technology: {
+    books: [
+      { title:"A Christian Field Guide to Technology for Engineers and Designers", author:"Derek C. Schuurman", blurb:"A framework for thinking Christianly about the technology and design choices you make at work.", link:"https://www.amazon.co.uk/s?k=Christian+Field+Guide+to+Technology+Schuurman" },
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work as participation in God's ongoing creative and redemptive work.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"Work Matters", author:"Tom Nelson", blurb:"Connects Sunday worship to the meaning of Monday's work.", link:"https://www.amazon.co.uk/s?k=Work+Matters+Tom+Nelson" },
+      { title:"The Call", author:"Os Guinness", blurb:"On discovering purpose and calling in everyday work.", link:"https://www.amazon.co.uk/s?k=The+Call+Os+Guinness" },
+      { title:"Visions of Vocation", author:"Steven Garber", blurb:"On sustaining purpose and integrity across a long working life.", link:"https://www.amazon.co.uk/s?k=Visions+of+Vocation+Steven+Garber" }
+    ],
+    mentors: [
+      { name:"Marketplace Chaplains", desc:"Workplace chaplaincy and care for employees.", link:"https://www.mchapusa.com" }
+    ]
+  },
+  marketing: {
+    books: [
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work as participation in God's ongoing creative and redemptive work.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"The Call", author:"Os Guinness", blurb:"On discovering purpose and calling in everyday work.", link:"https://www.amazon.co.uk/s?k=The+Call+Os+Guinness" },
+      { title:"Work Matters", author:"Tom Nelson", blurb:"Connects Sunday worship to the meaning of Monday's work.", link:"https://www.amazon.co.uk/s?k=Work+Matters+Tom+Nelson" },
+      { title:"Business for the Glory of God", author:"Wayne Grudem", blurb:"A theology of business, profit and honest persuasion.", link:"https://www.amazon.co.uk/s?k=Business+for+the+Glory+of+God+Wayne+Grudem" },
+      { title:"Visions of Vocation", author:"Steven Garber", blurb:"On sustaining purpose and integrity across a long working life.", link:"https://www.amazon.co.uk/s?k=Visions+of+Vocation+Steven+Garber" }
+    ],
+    mentors: [
+      { name:"Marketplace Chaplains", desc:"Workplace chaplaincy and care for employees.", link:"https://www.mchapusa.com" },
+      { name:"Halftime Institute", desc:"Helping leaders move from success to significance.", link:"https://halftime.org" }
+    ]
+  },
+  other: {
+    books: [
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work as participation in God's ongoing creative and redemptive work.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"The Call", author:"Os Guinness", blurb:"On discovering purpose and calling in everyday work.", link:"https://www.amazon.co.uk/s?k=The+Call+Os+Guinness" },
+      { title:"Visions of Vocation", author:"Steven Garber", blurb:"On sustaining purpose and integrity across a long working life.", link:"https://www.amazon.co.uk/s?k=Visions+of+Vocation+Steven+Garber" },
+      { title:"Work Matters", author:"Tom Nelson", blurb:"Connects Sunday worship to the meaning of Monday's work.", link:"https://www.amazon.co.uk/s?k=Work+Matters+Tom+Nelson" }
+    ],
+    mentors: [
+      { name:"Marketplace Chaplains", desc:"Workplace chaplaincy and care for employees.", link:"https://www.mchapusa.com" },
+      { name:"Halftime Institute", desc:"Helping leaders move from success to significance.", link:"https://halftime.org" }
+    ]
+  },
+  creative: {
+    books: [
+      { title:"The Artisan Soul", author:"Erwin Raphael McManus", blurb:"Frames creativity itself as an act of worship and a reflection of being made in God's image.", link:"https://www.amazon.co.uk/s?k=The+Artisan+Soul+Erwin+McManus" },
+      { title:"Walking on Water: Reflections on Faith and Art", author:"Madeleine L'Engle", blurb:"A meditation on faith, art and the discipline of creative obedience.", link:"https://www.amazon.co.uk/s?k=Walking+on+Water+Madeleine+LEngle" },
+      { title:"Art and the Bible", author:"Francis Schaeffer", blurb:"A foundational, concise case for art's value and place from a Christian worldview.", link:"https://www.amazon.co.uk/s?k=Art+and+the+Bible+Francis+Schaeffer" },
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work — including creative work — as participation in God's ongoing creativity.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"Visions of Vocation", author:"Steven Garber", blurb:"On sustaining purpose and integrity across a creative calling over the long haul.", link:"https://www.amazon.co.uk/s?k=Visions+of+Vocation+Steven+Garber" }
+    ],
+    mentors: [
+      { name:"Christians in the Visual Arts (CIVA)", desc:"A community and conference network for Christian artists.", link:"https://www.civa.org" },
+      { name:"Marketplace Chaplains", desc:"Workplace chaplaincy and care for employees.", link:"https://www.mchapusa.com" }
+    ]
+  },
+  management: {
+    books: [
+      { title:"Lead Like Jesus", author:"Ken Blanchard & Phil Hodges", blurb:"Reframes leadership around servanthood rather than status or control.", link:"https://www.amazon.co.uk/s?k=Lead+Like+Jesus+Ken+Blanchard" },
+      { title:"Spiritual Leadership", author:"J. Oswald Sanders", blurb:"A classic study of biblical leaders and the character that shaped their leadership.", link:"https://www.amazon.co.uk/s?k=Spiritual+Leadership+J+Oswald+Sanders" },
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work and leadership as participation in God's ongoing creative and redemptive work.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"God Is My CEO", author:"Larry Julian", blurb:"Practical, faith-based decision-making for the pressures of managing people and a bottom line.", link:"https://www.amazon.co.uk/s?k=God+Is+My+CEO+Larry+Julian" },
+      { title:"Business for the Glory of God", author:"Wayne Grudem", blurb:"A theology of business and leadership for those responsible for others' work.", link:"https://www.amazon.co.uk/s?k=Business+for+the+Glory+of+God+Wayne+Grudem" }
+    ],
+    mentors: [
+      { name:"C12 Group", desc:"Christian CEO & executive peer groups.", link:"https://www.joinc12.com" },
+      { name:"Halftime Institute", desc:"Helping leaders move from success to significance.", link:"https://halftime.org" }
+    ]
+  },
+  healthcare: {
+    books: [
+      { title:"Called to Care: A Christian Vision for Nursing", author:"Judith Allen Shelly & Arlene B. Miller", blurb:"A theological framework for nursing and patient care as vocation.", link:"https://www.amazon.co.uk/s?k=Called+to+Care+Christian+Vision+for+Nursing" },
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work — including the work of caring for others — as participation in God's ongoing work.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"Work Matters", author:"Tom Nelson", blurb:"Connects Sunday worship to the meaning of Monday's work at the bedside or in the clinic.", link:"https://www.amazon.co.uk/s?k=Work+Matters+Tom+Nelson" },
+      { title:"The Call", author:"Os Guinness", blurb:"On discovering purpose in the demanding, often unseen work of caring for others.", link:"https://www.amazon.co.uk/s?k=The+Call+Os+Guinness" },
+      { title:"Visions of Vocation", author:"Steven Garber", blurb:"On sustaining compassion and integrity across a long career of caring for people.", link:"https://www.amazon.co.uk/s?k=Visions+of+Vocation+Steven+Garber" }
+    ],
+    mentors: [
+      { name:"Christian Medical & Dental Associations (CMDA)", desc:"A fellowship and resource network for Christian healthcare professionals.", link:"https://cmda.org" },
+      { name:"Marketplace Chaplains", desc:"Workplace chaplaincy and care for employees.", link:"https://www.mchapusa.com" }
+    ]
+  },
+  education: {
+    books: [
+      { title:"On Christian Teaching: Practicing Faith in the Classroom", author:"David I. Smith", blurb:"Rethinks ordinary classroom practices — seating, grading, questions — as expressions of faith.", link:"https://www.amazon.co.uk/s?k=On+Christian+Teaching+David+I+Smith" },
+      { title:"Teaching Redemptively", author:"Donovan L. Graham", blurb:"A framework for weaving grace and truth into everyday teaching and correction.", link:"https://www.amazon.co.uk/s?k=Teaching+Redemptively+Donovan+Graham" },
+      { title:"Everyday Christian Teaching", author:"David I. Smith", blurb:"A practical companion guide to living out faith in day-to-day classroom decisions.", link:"https://www.amazon.co.uk/s?k=Everyday+Christian+Teaching+David+I+Smith" },
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work — including the work of teaching — as participation in God's ongoing work.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"Visions of Vocation", author:"Steven Garber", blurb:"On sustaining purpose and integrity across a long career of forming students.", link:"https://www.amazon.co.uk/s?k=Visions+of+Vocation+Steven+Garber" }
+    ],
+    mentors: [
+      { name:"Association of Christian Schools International (ACSI)", desc:"A global network and resource hub for Christian educators.", link:"https://www.acsi.org" },
+      { name:"Christian Educators Association International", desc:"Support and community for Christian teachers, including in public schools.", link:"https://www.ceai.org" }
+    ]
+  },
+  sports: {
+    books: [
+      { title:"The Christian Athlete: Glorifying God in Sports", author:"Brian Smith", blurb:"On competing and training as an act of worship rather than pure performance.", link:"https://www.amazon.co.uk/s?k=The+Christian+Athlete+Brian+Smith" },
+      { title:"Eric Liddell: Pure Gold", author:"David McCasland", blurb:"The biography behind Chariots of Fire, on faith, competition and costly conviction.", link:"https://www.amazon.co.uk/s?k=Eric+Liddell+Pure+Gold+David+McCasland" },
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work and discipline — including athletic discipline — as participation in God's work.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"The Call", author:"Os Guinness", blurb:"On discovering purpose in the discipline and drive that competition demands.", link:"https://www.amazon.co.uk/s?k=The+Call+Os+Guinness" },
+      { title:"Visions of Vocation", author:"Steven Garber", blurb:"On sustaining integrity and purpose across a demanding athletic career.", link:"https://www.amazon.co.uk/s?k=Visions+of+Vocation+Steven+Garber" }
+    ],
+    mentors: [
+      { name:"Fellowship of Christian Athletes (FCA)", desc:"A global sports ministry for athletes and coaches.", link:"https://www.fca.org" },
+      { name:"Athletes in Action", desc:"A sports ministry connecting athletes across the world.", link:"https://www.athletesinaction.org" }
+    ]
+  },
+  food: {
+    books: [
+      { title:"Making Room: Recovering Hospitality as a Christian Tradition", author:"Christine D. Pohl", blurb:"A theology of hospitality as a core, often-overlooked Christian practice.", link:"https://www.amazon.co.uk/s?k=Making+Room+Christine+Pohl" },
+      { title:"Table Grace", author:"Douglas Webster", blurb:"On serving others at the table as a spiritual practice, not just a job.", link:"https://www.amazon.co.uk/s?k=Table+Grace+Douglas+Webster" },
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work — including humble, unseen service — as participation in God's ongoing work.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"Work Matters", author:"Tom Nelson", blurb:"Connects Sunday worship to the dignity of Monday's serving and preparing.", link:"https://www.amazon.co.uk/s?k=Work+Matters+Tom+Nelson" },
+      { title:"Visions of Vocation", author:"Steven Garber", blurb:"On sustaining purpose and care across a career spent serving others.", link:"https://www.amazon.co.uk/s?k=Visions+of+Vocation+Steven+Garber" }
+    ],
+    mentors: [
+      { name:"Marketplace Chaplains", desc:"Workplace chaplaincy and care for employees.", link:"https://www.mchapusa.com" },
+      { name:"C12 Group", desc:"Christian business owner & executive peer groups.", link:"https://www.joinc12.com" }
+    ]
+  },
+  legal: {
+    books: [
+      { title:"The Lawyer's Calling: Christian Faith and Legal Practice", author:"Joseph G. Allegretti", blurb:"A theology of law practice as vocation, not just a career.", link:"https://www.amazon.co.uk/s?k=The+Lawyers+Calling+Joseph+Allegretti" },
+      { title:"The Servant Lawyer", author:"Robert F. Cochran Jr. (foreword by John Inazu)", blurb:"Practical reflections on holding onto faith amid the pressures of everyday legal practice.", link:"https://www.amazon.co.uk/s?k=The+Servant+Lawyer+Robert+Cochran" },
+      { title:"Can a Good Christian Be a Good Lawyer?", author:"ed. Thomas E. Baker & Timothy W. Floyd", blurb:"Essays wrestling honestly with faith inside an adversarial legal system.", link:"https://www.amazon.co.uk/s?k=Can+a+Good+Christian+Be+a+Good+Lawyer" },
+      { title:"Every Good Endeavor", author:"Timothy Keller", blurb:"On work — including the pursuit of justice — as participation in God's ongoing work.", link:"https://www.amazon.co.uk/s?k=Every+Good+Endeavor+Timothy+Keller" },
+      { title:"The Call", author:"Os Guinness", blurb:"On discovering purpose in the discerning, judgment-heavy work of the law.", link:"https://www.amazon.co.uk/s?k=The+Call+Os+Guinness" }
+    ],
+    mentors: [
+      { name:"Christian Legal Society", desc:"A national fellowship and advocacy network for Christian lawyers and students.", link:"https://christianlegalsociety.org" },
+      { name:"Marketplace Chaplains", desc:"Workplace chaplaincy and care for employees.", link:"https://www.mchapusa.com" }
+    ]
+  }
+};
+
+const REFLECTION_QUESTIONS = [
+  "Where in this week's passages did you feel most challenged?",
+  "What would it look like to actually live this out where you work this week?"
+];
+
+// Deterministically picks one item from an array based on a seed string, so the
+// same week/vocation always gets the same pick, but different weeks/vocations vary —
+// this is what keeps the no-Claude-account fallback content from repeating verbatim.
+function seededPick(arr, seed){
+  let hash = 0;
+  for(let i=0;i<seed.length;i++){ hash = (hash * 31 + seed.charCodeAt(i)) >>> 0; }
+  return arr[hash % arr.length];
+}
+
+const THEME_FALLBACK_TEMPLATES = [
+  { title:"Trusting What You Can't Yet See", frame:(p)=>`Across ${p}, there's a common thread of trusting God with what's still uncertain — worth carrying into your work this week.` },
+  { title:"Faithful in the Small Things", frame:(p)=>`${p} keeps returning to the same idea: faithfulness in small, unseen moments matters as much as the big ones — including in your work.` },
+  { title:"Wisdom for the Ordinary Day", frame:(p)=>`Reading ${p} this week points toward asking for wisdom in ordinary decisions, not just the big ones — a good posture to bring into work.` },
+  { title:"Steady Through the Noise", frame:(p)=>`${p} paints a picture of staying steady and clear-headed even when circumstances are noisy — something worth practicing this week.` },
+  { title:"Seeds Sown in the Waiting", frame:(p)=>`Across ${p}, there's a quiet theme of sowing now and trusting the harvest to God's timing, not your own.` },
+  { title:"Called, Not Just Employed", frame:(p)=>`${p} keeps circling back to the idea that your work is a calling, not just a job — worth sitting with this week.` }
+];
+
+const GROWTH_FALLBACK_TEMPLATES = [
+  { title:"Your Arc So Far", frame:(titles)=>`Looking back across ${titles}, a quiet thread of trust keeps showing up in your weeks. That's not nothing — it's the shape of something being formed in you.` },
+  { title:"A Quiet Thread of Faithfulness", frame:(titles)=>`Across ${titles}, the theme isn't dramatic breakthroughs — it's small, repeated faithfulness. That's exactly what formation usually looks like.` },
+  { title:"Formed in the Ordinary Weeks", frame:(titles)=>`${titles} weren't separate lessons so much as one lesson revisited — that God is at work in the ordinary rhythm of your weeks, not just the highlights.` },
+  { title:"Steadier Than You Think", frame:(titles)=>`Reading back through ${titles}, you've kept showing up — and that consistency is its own kind of growth, even on the weeks that felt unremarkable.` }
+];
+
+const CHALLENGE_FALLBACKS = {
+  sales: [
+    "Before your next pitch, pray specifically for the person on the other side of the deal — not just for the close.",
+    "This week, walk away from one deal that only benefits you and not the customer — and trust God with the lost commission."
+  ],
+  finance: [
+    "Before your next financial decision this week, ask one trusted person for counsel before you decide.",
+    "This week, give away the first, hardest-to-part-with portion of something before spending or saving the rest."
+  ],
+  builder: [
+    "This week, take five minutes before starting your work to ask God for skill and attention on one specific task.",
+    "This week, do one piece of work exactly as well when no one is checking as you would if someone were watching."
+  ],
+  creative: [
+    "Set aside 20 minutes this week to create something with no deadline or audience — just as an offering.",
+    "This week, finish one piece of work you've been tempted to leave undone or unpolished, as an act of care."
+  ],
+  management: [
+    "Delegate one task this week that you'd normally keep for yourself, and trust someone else with it.",
+    "This week, ask one person on your team a real, unhurried question about how they're doing — and just listen."
+  ],
+  healthcare: [
+    "This week, pray by name for one patient or colleague who is struggling, even briefly, before you see them.",
+    "This week, give one patient or colleague a few unhurried extra seconds of attention you weren't going to give."
+  ],
+  education: [
+    "This week, spend 10 minutes preparing a lesson or task specifically asking God for wisdom beyond your own.",
+    "This week, notice one student who's easy to overlook, and find a specific way to encourage them."
+  ],
+  sports: [
+    "This week, dedicate one training session specifically as an act of discipline offered to God, not just performance.",
+    "This week, encourage a teammate or competitor genuinely, even if it costs you something competitively."
+  ],
+  food: [
+    "This week, serve one person without being asked — a colleague, a customer — as an act of love, not obligation.",
+    "This week, prepare or serve one meal with the same care you'd give if you were serving it to someone you love."
+  ],
+  legal: [
+    "Before your next judgment call this week, pause and ask God for a discerning heart, not just the correct answer.",
+    "This week, take the extra time on one case or matter to get it right, even when a shortcut wouldn't be noticed."
+  ],
+  technology: [
+    "Before you ship or build something this week, take five minutes to ask who it will help and who it might harm.",
+    "This week, finish one small thing nobody will notice — a cleanup, a fix, a clearer note — as an offering."
+  ],
+  marketing: [
+    "Before you publish anything this week, ask whether it's true, kind and useful — and cut whatever isn't.",
+    "This week, spend ten quiet minutes in prayer before opening your feeds or dashboards, and notice how the day starts."
+  ],
+  other: [
+    "This week, write down the one decision you're facing and pray over it for five minutes each morning, without needing an answer yet.",
+    "This week, ask one person you trust what strengths they see in you, and bring what they say to God."
+  ]
+};
+
+/* ============================= STATE ============================= */
+
+const STORAGE_KEY = "rooted_state_v1";
+function loadState(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) return JSON.parse(raw);
+  } catch(e){}
+  return { name:"", vocationId:"finance", log:{}, themeHistory:[], reflections:{}, notifyMe:false, readRefs:{} };
+}
+function saveState(){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){} }
+let state = loadState();
+if(!state.readRefs) state.readRefs = {};
+
+/* ============================= HELPERS ============================= */
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove("show"), 2400);
+}
+
+function getVocation(id){ return VOCATIONS.find(v=>v.id===id) || VOCATIONS[1]; }
+
+function fmtDate(d){
+  // Local calendar date, not UTC — toISOString() would shift the date back a day
+  // for anyone in a positive UTC offset (e.g. British Summer Time) around midnight.
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+// The 7-day cycle starts on whatever day someone first opens their Reading Log —
+// not the calendar week — and rolls over to a fresh "Day 1" once 7 days have passed.
+function ensureCycle(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayStr = fmtDate(today);
+
+  // If a cycle is open but nothing has actually been logged in it yet, keep sliding
+  // its start forward to today — so "Day 1" always lands on the day the user first
+  // logs a passage, not the day they merely opened the app.
+  if(state.cycleStart && state.cycleStart !== todayStr){
+    const openLog = state.log[state.cycleStart];
+    const hasAnyLogged = openLog && Object.values(openLog).some(arr => arr && arr.length);
+    if(!hasAnyLogged){
+      delete state.log[state.cycleStart];
+      state.cycleStart = todayStr;
+      saveState();
+      return;
+    }
+  }
+
+  if(!state.cycleStart){
+    state.cycleStart = todayStr;
+    saveState();
+    return;
+  }
+
+  const start = new Date(state.cycleStart + "T00:00:00");
+  const diffDays = Math.round((today - start) / 86400000);
+  if(diffDays >= 7 || diffDays < 0){
+    state.cycleStart = todayStr;
+    saveState();
+  }
+}
+function getWeekDates(){
+  ensureCycle();
+  const start = new Date(state.cycleStart + "T00:00:00");
+  const dates = [];
+  for(let i=0;i<7;i++){ const d = new Date(start); d.setDate(start.getDate()+i); dates.push(d); }
+  return dates;
+}
+function weekKey(){ ensureCycle(); return state.cycleStart; }
+function dayLabel(d, idx){ return "Day " + (idx+1); }
+function monthDay(d){ return d.toLocaleDateString("en-GB",{month:"short", day:"numeric"}); }
+
+function currentWeekLog(){
+  const k = weekKey();
+  if(!state.log[k]) state.log[k] = {};
+  return state.log[k];
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* ============================= AI (sample capability) ============================= */
+
+// Rooted reaches Claude through the viewer's own Claude account. `claude.use`
+// resolves to null outside Claude, so every AI feature has a fallback.
+const claudeUse = (name) => (window.claude && typeof window.claude.use === "function")
+  ? window.claude.use(name).catch(() => null)
+  : Promise.resolve(null);
+const samplePromise = claudeUse("sample");
+const downloadsPromise = claudeUse("downloads");
+const BLOCKING_CODES = ["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"];
+let sampleBlocked = false;
+
+async function askClaude(prompt, tier){
+  const sample = await samplePromise;
+  if(!sample || sampleBlocked) return null;
+  try {
+    const { text } = await sample(prompt, { modelTier: tier || "default", cache: false });
+    return text ? text.trim() : null;
+  } catch(e){
+    if(e && BLOCKING_CODES.includes(e.code)) sampleBlocked = true;
+    console.warn("sample() failed", e && e.code);
+    return null;
+  }
+}
+
+/* ============================= RENDER: NAV ============================= */
+
+const NAV_ITEMS = [
+  { id:"foundation", label:"Foundation", icon:'<circle cx="9.3" cy="9" r="3.3" fill="currentColor" stroke="none"/><circle cx="14.7" cy="9" r="3.3" fill="currentColor" stroke="none"/><circle cx="12" cy="6.2" r="3.6" fill="currentColor" stroke="none"/><path d="M12 12v5.2M12 17.2c-1.7 0-3 1-4.1 2.4M12 17.2c1.7 0 3 1 4.1 2.4M12 17.2v2.8"/>' },
+  { id:"companion", label:"Companion", icon:'<path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3c-3.3 0-6 2.5-6 5.8 0 2.2 1.2 3.6 2.4 4.7.6.6 1 1.2 1 2V16h5.2v-.5c0-.8.4-1.4 1-2 1.2-1.1 2.4-2.5 2.4-4.7C18 5.5 15.3 3 12 3Z"/>' },
+  { id:"log", label:"Reading Log", icon:'<path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5Z"/>' },
+  { id:"theme", label:"Theme", icon:'<circle cx="12" cy="12" r="9"/><path d="M14.5 9.5 13 13l-3.5 1.5L11 11Z"/>' },
+  { id:"reflect", label:"Reflect", icon:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>' },
+  { id:"growth", label:"Growth", icon:'<path d="M12 21V10.5"/><path d="M12 10.5c-4.2 0-6.2-3-6.2-6.5 4.2 0 6.2 2.2 6.2 6.5Z"/><path d="M12 10.5c4.2 0 6.2-3 6.2-6.5-4.2 0-6.2 2.2-6.2 6.5Z"/>' },
+  { id:"resources", label:"Resources", icon:'<circle cx="12" cy="12" r="9"/><path d="M9 15l6-6"/><path d="M10 9h5v5"/>' },
+  { id:"community", label:"Community", icon:'<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4 4v-4H6.5A2.5 2.5 0 0 1 4 13.5Z"/>' }
+];
+
+let activeSection = "foundation";
+
+function renderNav(){
+  const nav = document.getElementById("nav");
+  nav.innerHTML = NAV_ITEMS.map(item => `
+    <button class="nav-item ${item.id===activeSection?'active':''}" data-nav="${item.id}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${item.icon}</svg>
+      ${item.label}
+      ${item.id === "companion" && companionHasNews() ? '<span class="nav-dot" aria-label="New"></span>' : ""}
+    </button>`).join("");
+  nav.querySelectorAll("[data-nav]").forEach(btn=>{
+    btn.addEventListener("click", ()=> switchSection(btn.dataset.nav));
+  });
+}
+
+function switchSection(id){
+  activeSection = id;
+  if(id === "companion") markCompanionSeen();
+  renderNav();
+  document.querySelectorAll(".section").forEach(s=> s.classList.toggle("active", s.id === "sec-"+id));
+  if(id === "companion") renderCompanion();
+  if(id === "theme") renderTheme();
+  if(id === "reflect") renderReflect();
+  if(id === "growth") renderGrowth();
+  if(id === "resources") renderResources();
+  closeSidebar();
+  window.scrollTo(0,0);
+}
+
+function openSidebar(){
+  document.getElementById("sidebar").classList.add("open");
+  document.getElementById("sidebarBackdrop").classList.add("open");
+}
+function closeSidebar(){
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("sidebarBackdrop").classList.remove("open");
+}
+
+function updateSidebarIdentity(){
+  const name = state.name || "Friend";
+  document.getElementById("sidebarName").textContent = name;
+  document.getElementById("avatarBadge").textContent = (name[0] || "?").toUpperCase();
+}
+
+/* ============================= SECTION: FOUNDATION ============================= */
+
+function renderFoundationHTML(){
+  const cards = VOCATIONS.map(v => {
+    const selected = v.id === state.vocationId;
+    return `
+    <div class="card" data-vocation="${v.id}" style="cursor:pointer; display:flex; flex-direction:column; gap:10px; position:relative; ${selected ? 'border-color:var(--accent-2); border-width:1.5px; box-shadow:0 1px 2px rgba(0,0,0,0.04);' : ''}">
+      ${selected ? `<div style="position:absolute; top:14px; right:14px; width:20px; height:20px; border-radius:50%; background:var(--accent-2); display:flex; align-items:center; justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>` : ""}
+      <div style="width:34px; height:34px; border-radius:8px; background:${selected?'var(--accent-2-soft)':'var(--surface-alt)'}; display:flex; align-items:center; justify-content:center; color:${selected?'var(--accent-2-ink)':'var(--ink-soft)'};">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${v.icon}</svg>
+      </div>
+      <div>
+        <div style="font-weight:600; font-size:14px;">${v.name}</div>
+        <div style="font-size:12px; color:var(--ink-faint); margin-top:2px;">${v.refShort}</div>
+      </div>
+      <p style="margin:0; font-size:12px; line-height:1.5; color:var(--ink-soft);">${v.blurb}</p>
+    </div>`;
+  }).join("");
+
+  return `
+    <div class="welcome-banner" style="background:var(--tree-bg); border-radius:16px; padding:22px 28px;">
+      <div style="width:64px; height:64px; border-radius:50%; background:var(--surface); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;">
+        <img src="logo.png" alt="Rooted" width="64" height="64" style="object-fit:cover;">
+      </div>
+      <div style="flex:1; min-width:180px;">
+        <div class="serif" style="font-size:19px; font-weight:600;">Welcome to Rooted</div>
+        <p style="margin:4px 0 0; font-size:13px; color:var(--ink-soft);">Let's personalize your study — what should we call you?</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <input id="nameInput" type="text" placeholder="Your first name" value="${escapeHtml(state.name||'')}" style="padding:10px 16px; background:var(--surface); border:1px solid var(--border); border-radius:8px; font-size:14px; color:var(--ink); min-width:150px;">
+        <button class="btn btn-primary" id="saveNameBtn">Continue</button>
+      </div>
+    </div>
+
+    <div style="max-width:620px;">
+      <div class="serif" style="font-size:30px; font-weight:600; line-height:1.2;">Your foundation<span id="foundationNameSuffix"></span></div>
+      <div class="serif" style="margin-top:12px; font-style:italic; font-size:15px; color:var(--accent-ink); line-height:1.5; cursor:pointer;" id="mastheadVerse">
+        "Whatever you do, work heartily, as for the Lord and not for men."
+        <span style="font-style:normal; color:var(--ink-faint); font-size:13px;">— Colossians 3:23</span>
+      </div>
+      <p style="margin:12px 0 0; color:var(--ink-soft); font-size:15px; line-height:1.6;">
+        Choose the vocation closest to yours. We'll anchor your study in a passage that speaks
+        to that calling — you can change this anytime.
+      </p>
+    </div>
+
+    <div class="vocation-grid">${cards}</div>
+
+    <div class="card" style="background:var(--accent-2-soft); border:none; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:26px 30px; flex-wrap:wrap;">
+      <div style="min-width:220px;">
+        <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-2-ink); font-weight:600;">Your current foundation</div>
+        <div class="serif" id="currentFoundationTitle" style="font-size:22px; font-weight:600; margin-top:6px;"></div>
+        <div style="font-size:13px; color:var(--ink-soft); margin-top:6px; max-width:460px;" id="currentFoundationBlurb"></div>
+      </div>
+      <button class="btn btn-primary" id="continueToLogBtn">
+        Continue to this week's reading
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
+    <div class="card" style="background:var(--surface-alt); border:none;">
+      <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); font-weight:600;">Move to another device</div>
+      <div style="font-size:13px; color:var(--ink-soft); margin-top:6px; max-width:520px; line-height:1.5;">
+        Your data lives only in this browser. Download a backup here, then restore it on your phone, laptop, or any other browser to pick up where you left off.
+      </div>
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; align-items:center;">
+        <button class="btn btn-primary" id="downloadBackupBtn" style="font-size:12px; padding:8px 14px;">Download backup</button>
+        <button class="btn btn-ghost" id="restoreBackupBtn" style="font-size:12px; padding:8px 14px;">Restore from backup</button>
+        <input type="file" id="restoreFileInput" accept="application/json" style="display:none;">
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <button class="btn btn-ghost" id="resetLogBtn" style="font-size:12px; padding:8px 14px;">Clear my reading log</button>
+      <button class="btn btn-ghost" id="exportBtn" style="font-size:12px; padding:8px 14px;">Export summary (text)</button>
+    </div>
+    <div class="footer">Created by Raphael Apata</div>
+  `;
+}
+
+function bindFoundationEvents(){
+  document.getElementById("saveNameBtn").addEventListener("click", ()=>{
+    const v = document.getElementById("nameInput").value.trim();
+    state.name = v;
+    saveState();
+    updateSidebarIdentity();
+    refreshFoundationDynamic();
+    toast(v ? `Nice to meet you, ${v}.` : "Name cleared.");
+  });
+  document.querySelectorAll("[data-vocation]").forEach(card=>{
+    card.addEventListener("click", ()=>{
+      state.vocationId = card.dataset.vocation;
+      saveState();
+      document.getElementById("sec-foundation").innerHTML = renderFoundationHTML();
+      bindFoundationEvents();
+      refreshFoundationDynamic();
+      rerenderLog();
+    });
+  });
+  document.getElementById("continueToLogBtn").addEventListener("click", ()=> switchSection("log"));
+  document.getElementById("mastheadVerse").addEventListener("click", ()=> openVerse("Colossians 3:23"));
+  document.getElementById("exportBtn").addEventListener("click", exportData);
+  document.getElementById("downloadBackupBtn").addEventListener("click", downloadBackup);
+  document.getElementById("restoreBackupBtn").addEventListener("click", ()=> document.getElementById("restoreFileInput").click());
+  document.getElementById("restoreFileInput").addEventListener("change", restoreBackup);
+  const resetBtn = document.getElementById("resetLogBtn");
+  resetBtn.addEventListener("click", ()=>{
+    if(!resetBtn.dataset.confirming){
+      resetBtn.dataset.confirming = "1";
+      resetBtn.textContent = "Click again to confirm";
+      clearTimeout(resetBtn._t);
+      resetBtn._t = setTimeout(()=>{ resetBtn.dataset.confirming = ""; resetBtn.textContent = "Clear my reading log"; }, 3000);
+      return;
+    }
+    clearTimeout(resetBtn._t);
+    state.log = {};
+    state.readRefs = {};
+    state.themeHistory = [];
+    delete state.cycleStart;
+    saveState();
+    rerenderLog();
+    resetBtn.dataset.confirming = "";
+    resetBtn.textContent = "Clear my reading log";
+    toast("Reading log cleared — Day 1 starts now.");
+  });
+  refreshFoundationDynamic();
+}
+
+function refreshFoundationDynamic(){
+  const v = getVocation(state.vocationId);
+  document.getElementById("foundationNameSuffix").textContent = state.name ? `, ${state.name}` : "";
+  document.getElementById("currentFoundationTitle").textContent = v.refShort;
+  document.getElementById("currentFoundationBlurb").textContent = v.blurb + " You can change your foundation anytime from this page.";
+}
+
+async function exportData(){
+  const lines = [];
+  lines.push("Rooted — my study export");
+  lines.push("Name: " + (state.name || "—"));
+  lines.push("Foundation: " + getVocation(state.vocationId).refShort);
+  lines.push("");
+  lines.push("Reading log:");
+  Object.keys(state.log).sort().forEach(wk=>{
+    const days = state.log[wk];
+    Object.keys(days).sort().forEach(d=>{
+      if(days[d].length) lines.push(`  ${d}: ${days[d].map(p=>p.ref).join(", ")}`);
+    });
+  });
+  lines.push("");
+  lines.push("Theme history:");
+  state.themeHistory.forEach(t=> lines.push(`  ${t.weekKey}: ${t.title}`));
+  const text = lines.join("\n");
+  await saveFile("rooted-export.txt", text, "text/plain");
+}
+
+// Works whether or not the viewer has a Claude account: tries the artifact
+// download capability first, falls back to a plain browser download so this
+// never depends on an AI/account feature.
+async function saveFile(filename, data, mime){
+  const downloads = await downloadsPromise;
+  if(downloads){
+    try {
+      await downloads.save({ filename, data });
+      toast("Saved " + filename);
+      return;
+    } catch(e){
+      if(e && e.code === "declined"){ toast("Download cancelled."); return; }
+      /* otherwise fall through to a plain browser download */
+    }
+  }
+  try {
+    const blob = new Blob([data], { type: mime || "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 2000);
+    toast("Downloaded " + filename);
+  } catch(e){
+    toast("Couldn't download — try again.");
+  }
+}
+
+async function downloadBackup(){
+  await saveFile("rooted-backup.json", JSON.stringify(state, null, 2), "application/json");
+}
+
+function restoreBackup(e){
+  const file = e.target.files && e.target.files[0];
+  e.target.value = "";
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    let parsed;
+    try { parsed = JSON.parse(reader.result); }
+    catch(err){ toast("That file doesn't look like a Rooted backup."); return; }
+    if(!parsed || typeof parsed !== "object" || !("log" in parsed) || !("vocationId" in parsed)){
+      toast("That file doesn't look like a Rooted backup.");
+      return;
+    }
+    state = Object.assign({ name:"", vocationId:"finance", log:{}, themeHistory:[], reflections:{}, notifyMe:false, readRefs:{} }, parsed);
+    ensureCompanionState();
+    saveState();
+    buildSections();
+    bindFoundationEvents();
+    bindLogEvents();
+    bindCommunityEvents();
+    updateSidebarIdentity();
+    switchSection("foundation");
+    toast("Backup restored.");
+  };
+  reader.onerror = () => toast("Couldn't read that file.");
+  reader.readAsText(file);
+}
+
+/* ============================= SECTION: READING LOG ============================= */
+
+// A tree that grows across the 7-day cycle: roots only at 0 days logged, a trunk by day 1-2,
+// bare branches by day 3, leaves filling in from day 4, full canopy + fruit at day 7.
+function renderGrowthTreeSVG(stage){
+  const v = (min, cls) => stage >= min ? "tree-part tree-visible" : "tree-part";
+  const delay = (i) => `animation-delay:${i * 90}ms;`;
+
+  return `
+  <svg width="100%" height="220" viewBox="0 0 240 240" style="display:block; max-width:260px; margin:0 auto;">
+    <!-- soil -->
+    <rect x="0" y="176" width="240" height="64" fill="var(--surface-alt)" />
+    <line x1="0" y1="176" x2="240" y2="176" stroke="var(--border)" stroke-width="1.5" />
+
+    <!-- roots: always visible from day 0 -->
+    <g class="${v(0)}" style="${delay(0)}" stroke="var(--tree-trunk)" stroke-width="3" fill="none" stroke-linecap="round">
+      <path d="M120 176 C 108 192, 92 196, 72 210" />
+      <path d="M120 176 C 112 196, 108 208, 100 228" />
+      <path d="M120 176 C 128 196, 132 208, 140 228" />
+      <path d="M120 176 C 132 192, 148 196, 168 210" />
+    </g>
+
+    <!-- trunk, lower half: day 1+ -->
+    <g class="${v(1)}" style="${delay(0)}">
+      <path d="M120 176 L120 130" stroke="var(--tree-trunk)" stroke-width="9" fill="none" stroke-linecap="round"/>
+    </g>
+
+    <!-- trunk, upper half: day 2+ -->
+    <g class="${v(2)}" style="${delay(1)}">
+      <path d="M120 130 L120 86" stroke="var(--tree-trunk)" stroke-width="7" fill="none" stroke-linecap="round"/>
+    </g>
+
+    <!-- bare branches: day 3+ -->
+    <g class="${v(3)}" style="${delay(2)}" stroke="var(--tree-trunk)" fill="none" stroke-linecap="round">
+      <path d="M120 100 C 105 92, 96 80, 86 66" stroke-width="5"/>
+      <path d="M120 96 C 135 88, 144 76, 154 62" stroke-width="5"/>
+    </g>
+
+    <!-- branch extensions: day 4+ -->
+    <g class="${v(4)}" style="${delay(3)}" stroke="var(--tree-trunk)" fill="none" stroke-linecap="round">
+      <path d="M96 78 C 88 68, 80 60, 68 52" stroke-width="4"/>
+      <path d="M144 74 C 152 64, 160 56, 172 48" stroke-width="4"/>
+    </g>
+
+    <!-- leaves 1: day 4+ (first leaves appear) -->
+    <g class="${v(4)}" style="${delay(4)}" fill="var(--tree-canopy)">
+      <circle cx="86" cy="64" r="13"/>
+      <circle cx="154" cy="60" r="13"/>
+      <circle cx="120" cy="82" r="12"/>
+    </g>
+
+    <!-- leaves 2: day 5+ -->
+    <g class="${v(5)}" style="${delay(5)}" fill="var(--tree-canopy)">
+      <circle cx="68" cy="50" r="13"/>
+      <circle cx="172" cy="46" r="13"/>
+      <circle cx="104" cy="58" r="12"/>
+      <circle cx="136" cy="56" r="12"/>
+    </g>
+
+    <!-- leaves 3: day 6+ -->
+    <g class="${v(6)}" style="${delay(6)}" fill="var(--tree-canopy)">
+      <circle cx="52" cy="58" r="12"/>
+      <circle cx="188" cy="54" r="12"/>
+      <circle cx="86" cy="40" r="13"/>
+      <circle cx="154" cy="38" r="13"/>
+      <circle cx="120" cy="46" r="14"/>
+    </g>
+
+    <!-- leaves 4 + fruit: day 7 (fully mature) -->
+    <g class="${v(7)}" style="${delay(7)}" fill="var(--tree-canopy)">
+      <circle cx="66" cy="30" r="12"/>
+      <circle cx="174" cy="28" r="12"/>
+      <circle cx="102" cy="30" r="13"/>
+      <circle cx="138" cy="28" r="13"/>
+      <circle cx="120" cy="20" r="13"/>
+    </g>
+    <g class="${v(7)}" style="${delay(8)}" fill="var(--accent)">
+      <circle cx="94" cy="52" r="4"/>
+      <circle cx="150" cy="48" r="4"/>
+      <circle cx="122" cy="66" r="4"/>
+      <circle cx="70" cy="46" r="3.5"/>
+    </g>
+  </svg>`;
+}
+
+function renderLogHTML(){
+  const dates = getWeekDates();
+  const log = currentWeekLog();
+  const loggedDays = dates.filter(d=> (log[fmtDate(d)]||[]).length>0).length;
+  const v = getVocation(state.vocationId);
+
+  const rows = dates.map((d, idx)=>{
+    const key = fmtDate(d);
+    const passages = log[key] || [];
+    const chips = passages.map((p,i)=>`
+      <button class="chip" data-verse-ref="${escapeHtml(p.ref)}" data-day="${key}" data-idx="${i}">
+        ${escapeHtml(p.ref)}
+        <span class="chip-remove" data-remove="${key}:${i}">✕</span>
+      </button>`).join("");
+
+    let addArea;
+    if(addingDayKey === key){
+      addArea = `
+        <span style="display:inline-flex; align-items:center; gap:6px;">
+          <input id="addPassageInput" type="text" placeholder="e.g. Romans 8:28" autocomplete="off"
+            style="padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--ink); font-size:13px; width:170px;">
+          <button class="btn btn-primary" data-confirm-add="${key}" style="padding:6px 12px; font-size:12px;">Add</button>
+          <button class="btn-ghost btn" data-cancel-add style="padding:6px 10px; font-size:12px;">✕</button>
+        </span>`;
+    } else {
+      const label = passages.length ? "+ Add another" : "+ Add a passage you read today";
+      addArea = `<button class="chip chip-add" data-add-day="${key}">${label}</button>`;
+    }
+
+    return `
+      <div style="display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); flex-wrap:wrap;">
+        <div style="width:56px; flex-shrink:0; font-weight:600; font-size:13px; color:var(--ink-soft);">${dayLabel(d, idx)}</div>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex:1;">${chips}${addArea}</div>
+        <div style="width:16px; text-align:right;">${passages.length ? '<span style="color:var(--accent-3-ink);">✓</span>' : ''}</div>
+      </div>`;
+  }).join("");
+
+  return `
+    <div style="display:flex; justify-content:space-between; align-items:baseline;">
+      <div class="serif" style="font-size:26px; font-weight:600;">This week's reading</div>
+      <div style="font-size:13px; color:var(--ink-soft);">${loggedDays} of 7 days logged</div>
+    </div>
+
+    <div class="log-grid">
+      <div class="log-grid-left">
+        <div class="card" style="background:var(--accent-2-soft); border:none; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-2-ink); font-weight:600;">Foundation Passages</div>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
+              ${v.refs.map(ref => {
+                const isRead = !!state.readRefs[ref];
+                return `<button class="chip foundation-chip" data-verse-ref="${escapeHtml(ref)}" style="font-weight:600; ${isRead ? 'background:var(--accent-3-soft); color:var(--accent-3-ink);' : 'background:var(--surface); color:var(--accent-2-ink);'}">${isRead ? '✓ ' : ''}${escapeHtml(ref)}</button>`;
+              }).join("")}
+            </div>
+          </div>
+          <button class="btn btn-ghost" id="markFoundationRead" style="font-size:13px;">✓ Read</button>
+        </div>
+
+        ${companionLogCardHTML()}
+
+        <div class="card" style="padding:0; overflow:hidden;">${rows}</div>
+
+        <div style="font-size:12px; font-style:italic; color:var(--ink-faint); text-align:center; line-height:1.5;">
+          There's no set number of passages here — log one, or several, as the Spirit leads. This is a rhythm to keep, not a box to check.
+          Type any reference (e.g. "John 3:16") — click it after to read the actual verse text (King James Version, bundled with this app), or jump to the full passage.
+        </div>
+
+        <div style="display:flex; justify-content:flex-end;">
+          <button class="btn btn-primary" id="seeThemeBtn">See this week's theme →</button>
+        </div>
+      </div>
+
+      <div class="log-grid-right">
+        <div class="card" style="background:var(--tree-bg); border:none; display:flex; flex-direction:column; align-items:center; gap:6px; padding:20px 18px 22px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-3-ink); font-weight:600; text-align:center;">Grow your tree with the Word</div>
+          ${renderGrowthTreeSVG(loggedDays)}
+          <div class="serif" style="font-style:italic; font-size:13px; color:var(--accent-3-ink); text-align:center; line-height:1.5; margin-top:2px;">
+            "For he shall be as a tree planted by the waters, and that spreadeth out her roots by the river, and shall not see when heat cometh, but her leaf shall be green; and shall not be careful in the year of drought, neither shall cease from yielding fruit."
+            <div style="font-style:normal; color:var(--ink-faint); font-size:12px; margin-top:4px;">— Jeremiah 17:8</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">Created by Raphael Apata</div>
+  `;
+}
+
+let addingDayKey = null;
+
+function bindLogEvents(){
+  document.getElementById("sec-log").querySelectorAll("[data-add-day]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      addingDayKey = btn.dataset.addDay;
+      rerenderLog();
+      const input = document.getElementById("addPassageInput");
+      if(input) input.focus();
+    });
+  });
+  const confirmBtn = document.getElementById("sec-log").querySelector("[data-confirm-add]");
+  if(confirmBtn){
+    confirmBtn.addEventListener("click", ()=> confirmAddPassage(confirmBtn.dataset.confirmAdd));
+  }
+  const cancelBtn = document.getElementById("sec-log").querySelector("[data-cancel-add]");
+  if(cancelBtn){
+    cancelBtn.addEventListener("click", ()=>{ addingDayKey = null; rerenderLog(); });
+  }
+  const input = document.getElementById("addPassageInput");
+  if(input){
+    input.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter"){ e.preventDefault(); confirmAddPassage(addingDayKey); }
+      if(e.key === "Escape"){ addingDayKey = null; rerenderLog(); }
+    });
+  }
+  document.getElementById("sec-log").querySelectorAll("[data-remove]").forEach(el=>{
+    el.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const [day, idx] = el.dataset.remove.split(":");
+      currentWeekLog()[day].splice(Number(idx),1);
+      saveState();
+      rerenderLog();
+    });
+  });
+  document.getElementById("sec-log").querySelectorAll("[data-verse-ref]").forEach(el=>{
+    el.addEventListener("click", (e)=>{
+      if(e.target.dataset.remove) return;
+      const ref = el.dataset.verseRef;
+      openVerse(ref);
+      if(el.classList.contains("foundation-chip") && !state.readRefs[ref]){
+        state.readRefs[ref] = true;
+        saveState();
+        el.classList.remove("foundation-chip"); // avoid double-marking before rerender
+        el.style.background = "var(--accent-3-soft)";
+        el.style.color = "var(--accent-3-ink)";
+        el.textContent = "✓ " + ref;
+      }
+    });
+  });
+  const markBtn = document.getElementById("markFoundationRead");
+  if(markBtn) markBtn.addEventListener("click", ()=>{
+    const v = getVocation(state.vocationId);
+    const key = fmtDate(new Date());
+    const log = currentWeekLog();
+    if(!log[key]) log[key] = [];
+    v.refs.forEach(ref=>{ if(!log[key].some(p=>p.ref===ref)) log[key].push({ref}); });
+    saveState();
+    rerenderLog();
+    toast("Marked as read.");
+  });
+  document.getElementById("seeThemeBtn").addEventListener("click", ()=> switchSection("theme"));
+  document.getElementById("sec-log").querySelectorAll("[data-companion-add]").forEach(b=>{
+    b.addEventListener("click", ()=> addSuggestionToToday(b.dataset.companionAdd));
+  });
+  document.getElementById("sec-log").querySelectorAll("[data-go-companion]").forEach(b=>{
+    b.addEventListener("click", ()=> switchSection("companion"));
+  });
+}
+
+function rerenderLog(){
+  document.getElementById("sec-log").innerHTML = renderLogHTML();
+  bindLogEvents();
+}
+
+function confirmAddPassage(dayKey){
+  const input = document.getElementById("addPassageInput");
+  const ref = input ? input.value.trim() : "";
+  if(!ref){ if(input) input.focus(); return; }
+  const log = currentWeekLog();
+  if(!log[dayKey]) log[dayKey] = [];
+  log[dayKey].push({ ref });
+  saveState();
+  addingDayKey = null;
+  rerenderLog();
+  toast(`Logged ${ref}.`);
+}
+
+/* ============================= VERSE POPOVER ============================= */
+
+async function openVerse(ref){
+  const verseTextEl = document.getElementById("verseText");
+  document.getElementById("verseRef").textContent = ref;
+  document.getElementById("verseFullLink").href = bgLink(ref);
+  verseTextEl.textContent = "Loading…";
+  document.getElementById("verseOverlay").classList.add("active");
+
+  await bibleReadyPromise; // resolves once the bundled Bible JSON has loaded (or failed)
+
+  const parsed = parseReference(ref);
+  if(BIBLE && parsed){
+    const html = formatVerseHTML(parsed.book, parsed.chapter, parsed.vStart, parsed.vEnd);
+    if(html){ verseTextEl.innerHTML = html; return; }
+  }
+  const cached = VERSES[ref];
+  if(cached){ verseTextEl.textContent = "“" + cached + "”"; return; }
+  verseTextEl.textContent = bibleLoadFailed
+    ? "We couldn't load the full Bible text just now — try the link below instead."
+    : "We couldn't match that reference — try the format \"Book Chapter:Verse\" (e.g. \"John 3:16\"), or read it below.";
+}
+function closeVerse(){ document.getElementById("verseOverlay").classList.remove("active"); }
+document.getElementById("verseOverlay").addEventListener("click", (e)=>{ if(e.target.id==="verseOverlay") closeVerse(); });
+
+/* ============================= SECTION: THEME ============================= */
+
+function allPassagesThisWeek(){
+  const log = currentWeekLog();
+  const list = [];
+  Object.values(log).forEach(arr=> arr.forEach(p=> list.push(p.ref)));
+  return list;
+}
+
+function renderTheme(){
+  const el = document.getElementById("sec-theme");
+  const passages = allPassagesThisWeek();
+  const v = getVocation(state.vocationId);
+  const wk = weekKey();
+  const existing = state.themeHistory.find(t=>t.weekKey===wk);
+
+  el.innerHTML = `
+    <div class="serif" style="font-size:26px; font-weight:600;">This week's theme</div>
+    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+      ${passages.length ? passages.map(r=>`<span class="chip" style="cursor:default;">${escapeHtml(r)}</span>`).join("") : '<span style="font-size:13px; color:var(--ink-faint);">Log a passage or two first, then generate a theme.</span>'}
+    </div>
+    <div class="card" id="themeCard" style="min-height:120px; display:flex; align-items:center; justify-content:center;">
+      ${existing ? themeCardInner(existing) : `<button class="btn btn-primary" id="genThemeBtn" ${passages.length? "" : "disabled"}>Generate this week's theme</button>`}
+    </div>
+    <div style="display:flex; justify-content:flex-end;">
+      <button class="btn btn-ghost" id="toReflectBtn">Continue to reflection →</button>
+    </div>
+    <div class="footer">Created by Raphael Apata</div>
+  `;
+  const genBtn = document.getElementById("genThemeBtn");
+  if(genBtn) genBtn.addEventListener("click", generateTheme);
+  document.getElementById("toReflectBtn").addEventListener("click", ()=> switchSection("reflect"));
+  if(existing) bindThemeRegenerate();
+}
+
+function themeCardInner(t){
+  return `
+    <div style="width:100%;">
+      <div class="serif" style="font-size:20px; font-weight:600;">${escapeHtml(t.title)}</div>
+      <p style="margin:10px 0 0; font-size:14px; line-height:1.6; color:var(--ink-soft);">${escapeHtml(t.summary)}</p>
+      <button class="btn btn-ghost" id="regenThemeBtn" style="margin-top:14px; font-size:12px; padding:8px 14px;">Regenerate</button>
+    </div>`;
+}
+function bindThemeRegenerate(){
+  const b = document.getElementById("regenThemeBtn");
+  if(b) b.addEventListener("click", ()=>{
+    state.themeHistory = state.themeHistory.filter(t=>t.weekKey!==weekKey());
+    saveState();
+    generateTheme();
+  });
+}
+
+async function generateTheme(){
+  const passages = allPassagesThisWeek();
+  const v = getVocation(state.vocationId);
+  const card = document.getElementById("themeCard");
+  card.innerHTML = `<span style="font-size:13px; color:var(--ink-faint);">Thinking it over…</span>`;
+
+  const prompt = `You are helping someone reflect on their week of Bible reading. They work in ${v.name}. This week they logged these passages: ${passages.join("; ")}.
+Write a short, warm, non-preachy "theme" for their week in this exact format (no extra commentary):
+TITLE: <a short, evocative 3-7 word theme title>
+SUMMARY: <2-3 sentences, encouraging tone, tying the passages together into one idea, gently connecting it to their vocation>`;
+
+  let title, summary;
+  const completion = await askClaude(prompt, "default");
+  if(completion){
+    const tMatch = completion.match(/TITLE:\s*(.+)/i);
+    const sMatch = completion.match(/SUMMARY:\s*([\s\S]+)/i);
+    title = tMatch ? tMatch[1].trim() : "This week's thread";
+    summary = sMatch ? sMatch[1].trim() : completion.trim();
+  } else {
+    const wk0 = weekKey();
+    const tpl = seededPick(THEME_FALLBACK_TEMPLATES, wk0 + state.vocationId);
+    title = tpl.title;
+    summary = tpl.frame(passages.join(", ") || "this week's reading");
+  }
+
+  const wk = weekKey();
+  state.themeHistory = state.themeHistory.filter(t=>t.weekKey!==wk);
+  state.themeHistory.push({ weekKey: wk, title, summary, generatedAt: Date.now() });
+  saveState();
+  card.innerHTML = themeCardInner({title, summary});
+  bindThemeRegenerate();
+}
+
+/* ============================= SECTION: REFLECT ============================= */
+
+function renderReflect(){
+  const el = document.getElementById("sec-reflect");
+  const v = getVocation(state.vocationId);
+  const wk = weekKey();
+  const theme = state.themeHistory.find(t=>t.weekKey===wk);
+  if(!state.reflections[wk]) state.reflections[wk] = { journal:"", challengeDone:false, challenge:null };
+  const refl = state.reflections[wk];
+
+  el.innerHTML = `
+    <div class="serif" style="font-size:26px; font-weight:600;">Reflect${state.name ? ", " + escapeHtml(state.name) : ""}</div>
+    ${theme ? `<span class="chip" style="cursor:default;">${escapeHtml(theme.title)}</span>` : `<div style="font-size:13px; color:var(--ink-faint);">Generate this week's theme first for a personalized challenge.</div>`}
+
+    <div class="card" style="background:var(--accent-3-soft); border:none;" id="challengeCard">
+      ${refl.challenge ? challengeInner(refl) : `<button class="btn btn-primary" id="genChallengeBtn">Get this week's challenge</button>`}
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      ${REFLECTION_QUESTIONS.map((q,i)=>`
+        <div>
+          <div style="font-weight:500; font-size:14px; margin-bottom:6px;">${i+1}. ${q}</div>
+        </div>`).join("")}
+    </div>
+
+    <div>
+      <div style="font-weight:500; font-size:14px; margin-bottom:8px;">Journal</div>
+      <textarea id="journalInput" rows="6" placeholder="Write freely…" style="width:100%; padding:14px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--ink); font-size:14px; line-height:1.6;">${escapeHtml(refl.journal||"")}</textarea>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <a href="#" id="goDeeperLink" style="font-size:13px; font-weight:500;">Want to go deeper? See reading &amp; mentors for ${v.name} →</a>
+      <button class="btn btn-primary" id="saveReflectionBtn">Save reflection</button>
+    </div>
+    <div class="footer">Created by Raphael Apata</div>
+  `;
+
+  const genBtn = document.getElementById("genChallengeBtn");
+  if(genBtn) genBtn.addEventListener("click", ()=> generateChallenge(theme));
+  document.getElementById("goDeeperLink").addEventListener("click", (e)=>{ e.preventDefault(); switchSection("resources"); });
+  document.getElementById("saveReflectionBtn").addEventListener("click", ()=>{
+    refl.journal = document.getElementById("journalInput").value;
+    saveState();
+    toast("Reflection saved.");
+  });
+  bindChallengeDoneToggle();
+}
+
+function challengeInner(refl){
+  const c = refl.challenge;
+  return `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+      <div>
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-3-ink); font-weight:600;">For ${escapeHtml(getVocation(state.vocationId).name)}</div>
+        <div class="serif" style="font-size:18px; font-weight:600; margin-top:4px;">${escapeHtml(c.title)}</div>
+      </div>
+    </div>
+    <p style="margin:10px 0 0; font-size:14px; line-height:1.6; color:var(--ink-soft);">${escapeHtml(c.body)}</p>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
+      <span style="font-size:12px; color:var(--ink-faint); font-style:italic;">${escapeHtml(c.footer||"")}</span>
+      <button class="btn ${refl.challengeDone ? 'btn-ghost' : 'btn-primary'}" id="markChallengeDoneBtn">${refl.challengeDone ? "✓ Done" : "Mark as done"}</button>
+    </div>
+  `;
+}
+function bindChallengeDoneToggle(){
+  const b = document.getElementById("markChallengeDoneBtn");
+  if(b) b.addEventListener("click", ()=>{
+    const wk = weekKey();
+    state.reflections[wk].challengeDone = !state.reflections[wk].challengeDone;
+    saveState();
+    document.getElementById("challengeCard").innerHTML = challengeInner(state.reflections[wk]);
+    bindChallengeDoneToggle();
+  });
+}
+
+async function generateChallenge(theme){
+  const v = getVocation(state.vocationId);
+  const card = document.getElementById("challengeCard");
+  card.innerHTML = `<span style="font-size:13px; color:var(--ink-faint);">Thinking it over…</span>`;
+
+  const prompt = `Someone works in ${v.name}. Their reading is anchored in ${v.refShort}. ${theme ? `This week's theme is "${theme.title}": ${theme.summary}` : ""}
+Write ONE short, concrete, practical action they could try this week at work — not a reflection question, an actual small action. Format exactly:
+TITLE: <a short imperative title, under 6 words>
+BODY: <1-2 sentences describing the specific action>
+VERSE: <one short scripture reference that supports it>`;
+
+  let title, body, footer;
+  const completion = await askClaude(prompt, "default");
+  if(completion){
+    const t = completion.match(/TITLE:\s*(.+)/i);
+    const b = completion.match(/BODY:\s*(.+)/i);
+    const vs = completion.match(/VERSE:\s*(.+)/i);
+    title = t ? t[1].trim() : "Try this today.";
+    body = b ? b[1].trim() : completion.trim();
+    footer = vs ? vs[1].trim() : "";
+  } else {
+    title = "Try this today.";
+    const options = CHALLENGE_FALLBACKS[state.vocationId] || CHALLENGE_FALLBACKS.finance;
+    body = seededPick(options, weekKey() + state.vocationId);
+    footer = v.refShort;
+  }
+
+  const wk = weekKey();
+  state.reflections[wk].challenge = { title, body, footer };
+  saveState();
+  card.innerHTML = challengeInner(state.reflections[wk]);
+  bindChallengeDoneToggle();
+}
+
+/* ============================= SECTION: GROWTH ============================= */
+
+function renderGrowth(){
+  const el = document.getElementById("sec-growth");
+  const history = [...state.themeHistory].sort((a,b)=> a.weekKey.localeCompare(b.weekKey));
+  const recent = history.slice(-8);
+  const enough = history.length >= 4;
+
+  const timeline = recent.slice().reverse().map(t=>`
+    <div style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid var(--border);">
+      <div style="width:90px; flex-shrink:0; font-size:12px; color:var(--ink-faint);">${t.weekKey}</div>
+      <div style="font-size:14px; font-weight:500;">${escapeHtml(t.title)}</div>
+    </div>`).join("") || `<div style="font-size:13px; color:var(--ink-faint); padding:12px 0;">No themes logged yet — generate a weekly theme to start your timeline.</div>`;
+
+  const arcRecord = state.growthArc && state.growthArc.count === history.length ? state.growthArc : null;
+
+  el.innerHTML = `
+    <div class="serif" style="font-size:26px; font-weight:600;">Your growth${state.name ? ", " + escapeHtml(state.name) : ""}</div>
+    <div style="font-size:13px; color:var(--ink-faint);">Not a streak — a story. This tracks what's actually forming in you, not whether you showed up.</div>
+
+    <div class="card" style="background:var(--tree-bg); border:none;">
+      ${enough
+        ? (arcRecord ? arcCardInner(arcRecord) : `<button class="btn btn-primary" id="genArcBtn">Generate my monthly arc</button>`)
+        : `<div style="font-size:14px; color:var(--ink-soft);">Keep logging themes — your first monthly arc appears after 4 weeks. You're at <strong>${history.length} of 4</strong>.</div>`}
+    </div>
+
+    <div>
+      <div style="font-weight:500; font-size:14px; margin-bottom:10px;">Week by week</div>
+      <div class="card" style="padding:6px 20px;">${timeline}</div>
+    </div>
+    <div class="footer">Created by Raphael Apata</div>
+  `;
+  const genBtn = document.getElementById("genArcBtn");
+  if(genBtn) genBtn.addEventListener("click", ()=> generateArc(history));
+}
+
+function arcCardInner(arc){
+  return `
+    <div class="serif" style="font-size:18px; font-weight:600;">${escapeHtml(arc.title)}</div>
+    <p style="margin:10px 0 0; font-size:14px; line-height:1.65; color:var(--ink-soft);">${escapeHtml(arc.narrative)}</p>
+    <div style="font-size:12px; color:var(--ink-faint); margin-top:12px; font-style:italic;">This isn't a performance score — just a reflection of the season you're in.</div>
+  `;
+}
+
+async function generateArc(history){
+  const el = document.getElementById("sec-growth");
+  const card = el.querySelector(".card");
+  card.innerHTML = `<span style="font-size:13px; color:var(--ink-faint);">Looking back over your weeks…</span>`;
+  const v = getVocation(state.vocationId);
+  const themesText = history.map(t=>`${t.weekKey}: ${t.title} — ${t.summary}`).join("\n");
+
+  const prompt = `Someone has been logging weekly Bible-study themes while working in ${v.name}. Here is their theme history, oldest first:
+${themesText}
+Write a short, warm, encouraging monthly "growth arc" narrative (4-6 sentences) that notices any recurring thread across these weeks and frames it as a personal story of formation, not a performance score. Format exactly:
+TITLE: <a short, warm title for this arc, e.g. "Your September Arc">
+NARRATIVE: <the narrative>`;
+
+  let title, narrative;
+  const completion = await askClaude(prompt, "default");
+  if(completion){
+    const t = completion.match(/TITLE:\s*(.+)/i);
+    const n = completion.match(/NARRATIVE:\s*([\s\S]+)/i);
+    title = t ? t[1].trim() : "Your arc so far";
+    narrative = n ? n[1].trim() : completion.trim();
+  } else {
+    const tpl = seededPick(GROWTH_FALLBACK_TEMPLATES, weekKey() + state.vocationId + history.length);
+    title = tpl.title;
+    narrative = tpl.frame(history.map(t=>t.title).join(", "));
+  }
+
+  state.growthArc = { title, narrative, count: history.length, generatedAt: Date.now() };
+  saveState();
+  card.innerHTML = arcCardInner(state.growthArc);
+}
+
+/* ============================= COMPANION (the agent) ============================= */
+// This is what makes the companion an agent rather than a single prompt: Claude is
+// given a goal and a set of tools (the page functions below). Claude decides which
+// tools to call and in what order, reads what they return, and only then writes.
+
+let companionRun = null;          // the check-in in progress: { steps, suggestion, reviewKey, ctl, trigger }
+let companionUnavailable = false; // Claude can't be reached from this view
+let companionError = "";
+
+function ensureCompanionState(){
+  if(!state.companion || typeof state.companion !== "object") state.companion = {};
+  if(!Array.isArray(state.companion.notes)) state.companion.notes = [];
+}
+ensureCompanionState();
+
+function latestCompanionNote(){ ensureCompanionState(); return state.companion.notes[0] || null; }
+
+function companionHasNews(){
+  if(companionRun) return true;
+  const n = latestCompanionNote();
+  return !!(n && state.companion.seenNoteId !== n.id);
+}
+function markCompanionSeen(){
+  const n = latestCompanionNote();
+  if(n && state.companion.seenNoteId !== n.id){ state.companion.seenNoteId = n.id; saveState(); }
+}
+
+// The most recent finished 7-day cycle that has at least one logged passage.
+function previousWeekKey(){
+  const cur = weekKey();
+  const keys = Object.keys(state.log)
+    .filter(k => k < cur && Object.values(state.log[k] || {}).some(a => a && a.length))
+    .sort();
+  return keys.length ? keys[keys.length - 1] : null;
+}
+
+function weekSummary(key){
+  const days = state.log[key] || {};
+  const start = new Date(key + "T00:00:00");
+  const out = [];
+  for(let i=0;i<7;i++){
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    const k = fmtDate(d);
+    out.push({ day:"Day " + (i+1), date:k, passages:(days[k] || []).map(p => p.ref) });
+  }
+  return { weekStarting:key, daysWithReading: out.filter(d => d.passages.length).length, days: out };
+}
+
+function recentLoggedRefs(weeks){
+  const refs = [];
+  Object.keys(state.log).sort().slice(-weeks).forEach(k =>
+    Object.values(state.log[k] || {}).forEach(arr => (arr || []).forEach(p => refs.push(p.ref))));
+  return refs;
+}
+
+// Plain KJV text for a reference, from the Bible bundled with Rooted.
+function passageText(ref){
+  const parsed = parseReference(ref);
+  if(!parsed) return { error:"Couldn't read that reference. Use the form 'Book Chapter:Verse-Verse', for example 'Proverbs 16:1-9'." };
+  if(!BIBLE) return { error:"The Bible text hasn't loaded." };
+  const chapterArr = BIBLE[parsed.book] && BIBLE[parsed.book][parsed.chapter - 1];
+  if(!chapterArr) return { error:`${parsed.book} ${parsed.chapter} isn't in the Bible text.` };
+  const start = parsed.vStart || 1;
+  if(start > chapterArr.length) return { error:`${parsed.book} ${parsed.chapter} has only ${chapterArr.length} verses.` };
+  const end = Math.min(parsed.vEnd || (parsed.vStart ? parsed.vStart : chapterArr.length), chapterArr.length);
+  const verses = [];
+  for(let v = start; v <= end && verses.length < 40; v++) verses.push(v + " " + chapterArr[v - 1]);
+  let text = verses.join(" ");
+  if(text.length > 3500) text = text.slice(0, 3500) + " …";
+  const label = `${parsed.book} ${parsed.chapter}` + (parsed.vStart ? `:${start}` + (end > start ? `-${end}` : "") : "");
+  return { reference: label, text, versesInChapter: chapterArr.length };
+}
+
+const WHICH_WEEK_SCHEMA = {
+  type:"object",
+  properties:{ which:{ type:"string", enum:["last_week","this_week"], description:"last_week = the most recent finished week; this_week = the week in progress" } },
+  required:["which"]
+};
+
+// The tools Claude can choose from. Each one is a small, safe page function:
+// five only read, and one (suggest_passage) saves a single suggestion.
+function companionTools(ctx){
+  const v = getVocation(state.vocationId);
+  const step = (text) => { ctx.steps.push(text); renderCompanionLive(); };
+  const keyFor = (input) => String(input && input.which) === "this_week" ? weekKey() : ctx.reviewKey;
+  return [
+    {
+      name:"get_profile",
+      description:"Returns the reader's first name, their vocation, the foundation passages Rooted anchors that vocation in, and today's date. Call this first.",
+      execute(){
+        step("Checked your name and vocation");
+        return { name: state.name || null, vocation: v.name, foundationPassages: v.refs, foundationTheme: v.blurb, today: fmtDate(new Date()) };
+      }
+    },
+    {
+      name:"get_reading_log",
+      description:"Returns the passages the reader logged, day by day, for last_week or this_week, and how many days had reading.",
+      inputSchema: WHICH_WEEK_SCHEMA,
+      execute(input){
+        const key = keyFor(input);
+        step(String(input && input.which) === "this_week" ? "Read this week's reading log" : "Read last week's reading log");
+        if(!key) return { note:"There is no finished week on record yet." };
+        return weekSummary(key);
+      }
+    },
+    {
+      name:"get_journal",
+      description:"Returns what the reader wrote in their private journal for last_week or this_week, plus that week's practical challenge and whether they marked it done. It is personal: handle it with care.",
+      inputSchema: WHICH_WEEK_SCHEMA,
+      execute(input){
+        const key = keyFor(input);
+        step(String(input && input.which) === "this_week" ? "Read this week's journal" : "Read last week's journal");
+        const r = key && state.reflections ? state.reflections[key] : null;
+        if(!r || (!r.journal && !r.challenge)) return { note:"Nothing was written in the journal that week." };
+        return {
+          journal: (r.journal || "").slice(0, 4000) || null,
+          challenge: r.challenge ? `${r.challenge.title}: ${r.challenge.body}` : null,
+          challengeDone: !!r.challengeDone
+        };
+      }
+    },
+    {
+      name:"get_theme_history",
+      description:"Returns the reader's past weekly themes (up to 8, oldest first) and the passages they logged over the last six weeks. Use it to spot recurring threads and to avoid suggesting something they just read.",
+      execute(){
+        step("Looked back over your past themes");
+        const themes = [...state.themeHistory].sort((a,b) => a.weekKey.localeCompare(b.weekKey)).slice(-8)
+          .map(t => ({ week:t.weekKey, title:t.title, summary:t.summary }));
+        return { themes, recentPassages: recentLoggedRefs(6).slice(-60) };
+      }
+    },
+    {
+      name:"lookup_passage",
+      description:"Returns the King James text of a passage (up to 40 verses) from the Bible bundled in Rooted. Reference format: 'Book Chapter:Verse-Verse', e.g. 'Nehemiah 2:1-8'. Read a passage before you recommend it.",
+      inputSchema:{ type:"object", properties:{ reference:{ type:"string" } }, required:["reference"] },
+      async execute(input){
+        await bibleReadyPromise;
+        const ref = String(input && input.reference || "").slice(0, 80);
+        const r = passageText(ref);
+        step(r.error ? `Tried to look up ${ref}` : `Read ${r.reference}`);
+        if(r.error) throw new Error(r.error);
+        return r;
+      }
+    },
+    {
+      name:"suggest_passage",
+      description:"Saves ONE passage as the reader's suggested reading for the coming week, with a one- or two-sentence reason tied to their vocation. Call it exactly once, after reading the passage. Calling it again replaces the earlier pick.",
+      inputSchema:{ type:"object", properties:{ reference:{ type:"string" }, reason:{ type:"string" } }, required:["reference","reason"] },
+      async execute(input){
+        await bibleReadyPromise;
+        const r = passageText(String(input && input.reference || "").slice(0, 80));
+        if(r.error) throw new Error(r.error);
+        ctx.suggestion = { ref: r.reference, reason: String(input.reason || "").slice(0, 400) };
+        step(`Picked ${r.reference} for your week ahead`);
+        return { saved:true, reference:r.reference };
+      }
+    }
+  ];
+}
+
+function companionBrief(ctx){
+  const v = getVocation(state.vocationId);
+  const weekWord = ctx.reviewKey ? "last_week" : "this_week (there is no finished week yet)";
+  return `You are the study companion inside Rooted, an app where someone reads the Bible alongside their working life. Once a week you check in with them. Be warm, plain-spoken and encouraging. Never be preachy, and never make them feel guilty about missed days.
+
+Your job right now:
+1. Find out how their week went. Use the tools to look; don't guess. Start with get_profile, then read their reading log and journal for ${weekWord}. Check their theme history for threads that keep coming back.
+2. Choose ONE passage for the coming week, from a few verses up to one chapter, that speaks to their vocation (${v.name}) and connects to what you noticed. Avoid passages they read in the last few weeks. Read it with lookup_passage first, then save it with suggest_passage, exactly once.
+3. Adapt to how the week went. If they read on most days, build on that momentum. If they read little or nothing, be gracious and keep the suggestion short.
+
+The journal is private. Refer to it gently and briefly, and never quote more than a few words of it. If it suggests they are going through something hard, acknowledge that with care and encourage them to talk with someone they trust.
+
+When you are done, reply with only this JSON:
+{"title": "a 3-7 word title for their week ahead", "message": "3-5 sentences written directly to them${state.name ? ` (their name is ${state.name})` : ""}: what you noticed about their week and why the suggested passage fits", "noticed": "one short sentence naming the pattern or thread you saw"}`;
+}
+
+function companionErrorCopy(code){
+  if(code === "rate_limited") return "You've reached your Claude usage limit for now. Try the check-in again later.";
+  if(code === "session_expired") return "Sign in to Claude again, then try the check-in.";
+  if(code === "refused" || code === "empty_completion" || code === "invalid_json") return "The check-in didn't come together this time. Try again.";
+  return "Rooted couldn't reach Claude just now. Try the check-in again in a moment.";
+}
+
+async function runCompanion(trigger){
+  if(companionRun) return;
+  ensureCompanionState();
+  companionError = "";
+  const sample = await samplePromise;
+  const limits = sample && !sampleBlocked ? await sample.limits().catch(() => null) : null;
+  if(!limits || !limits.tools){ companionUnavailable = true; renderCompanion(); return; }
+
+  const ctx = { steps:[], suggestion:null, reviewKey: previousWeekKey(), ctl: new AbortController(), trigger };
+  companionRun = ctx;
+  state.companion.lastAttemptAt = Date.now();
+  saveState();
+  renderCompanion(); renderNav();
+
+  try {
+    const result = await sample.json(companionBrief(ctx), { tools: companionTools(ctx), signal: ctx.ctl.signal, modelTier:"default" });
+    const str = (x) => typeof x === "string" ? x.trim() : "";
+    if(!ctx.suggestion){
+      const v = getVocation(state.vocationId);
+      ctx.suggestion = { ref: v.full, reason: `A passage from your foundation for ${v.name}.` };
+    }
+    const note = {
+      id: String(Date.now()),
+      createdAt: Date.now(),
+      weekKey: weekKey(),
+      reviewedWeek: ctx.reviewKey,
+      trigger,
+      title: str(result && result.title) || "Your week ahead",
+      message: str(result && result.message),
+      noticed: str(result && result.noticed),
+      suggestion: ctx.suggestion,
+      suggestionStatus: "open",
+      steps: ctx.steps.slice(0, 20)
+    };
+    state.companion.notes.unshift(note);
+    state.companion.notes = state.companion.notes.slice(0, 12);
+    state.companion.lastRunAt = Date.now();
+    if(ctx.reviewKey) state.companion.lastReviewed = ctx.reviewKey;
+    if(activeSection === "companion") state.companion.seenNoteId = note.id;
+    saveState();
+    if(activeSection !== "companion") toast("Your weekly check-in is ready.");
+  } catch(e){
+    const code = e && e.code;
+    if(BLOCKING_CODES.includes(code) || code === "tools_unavailable"){ sampleBlocked = true; companionUnavailable = true; }
+    else if(code !== "cancelled"){ companionError = companionErrorCopy(code); }
+  } finally {
+    companionRun = null;
+    renderCompanion(); renderNav();
+    if(activeSection === "log") rerenderLog();
+  }
+}
+
+// Runs once a week on its own: when a finished week hasn't been reviewed yet, or a
+// week has gone by since the last check-in. At most one automatic try a day.
+function companionDue(){
+  ensureCompanionState();
+  const c = state.companion;
+  if(c.lastAttemptAt && Date.now() - c.lastAttemptAt < 20 * 3600 * 1000) return false;
+  const prev = previousWeekKey();
+  if(prev && (!c.lastReviewed || prev > c.lastReviewed)) return true;
+  if(c.lastRunAt && Date.now() - c.lastRunAt >= 7 * 86400000) return true;
+  return false;
+}
+async function maybeAutoRunCompanion(){
+  if(!companionDue()) return;
+  const sample = await samplePromise;
+  if(!sample) return;
+  if(activeSection === "foundation") switchSection("companion");
+  runCompanion("auto");
+}
+
+function addSuggestionToToday(noteId){
+  const note = state.companion.notes.find(n => n.id === noteId);
+  if(!note || !note.suggestion) return;
+  const key = fmtDate(new Date());
+  const log = currentWeekLog();
+  if(!log[key]) log[key] = [];
+  if(!log[key].some(p => p.ref === note.suggestion.ref)) log[key].push({ ref: note.suggestion.ref });
+  note.suggestionStatus = "added";
+  saveState();
+  toast(`Added ${note.suggestion.ref} to today's reading.`);
+  rerenderLog();
+  if(activeSection === "companion") renderCompanion();
+}
+function skipSuggestion(noteId){
+  const note = state.companion.notes.find(n => n.id === noteId);
+  if(!note) return;
+  note.suggestionStatus = "skipped";
+  saveState();
+  rerenderLog();
+  if(activeSection === "companion") renderCompanion();
+}
+
+function fmtNoteDate(ts){
+  try { return new Date(ts).toLocaleDateString("en-GB", { weekday:"short", day:"numeric", month:"short" }); }
+  catch(e){ return ""; }
+}
+
+function companionNoteHTML(note, isLatest){
+  const s = note.suggestion;
+  let actions = "";
+  if(s && isLatest && note.suggestionStatus === "open"){
+    actions = `<div class="row-wrap">
+        <button class="btn btn-primary" data-companion-add="${note.id}" style="font-size:13px; padding:8px 14px;">Add to today's reading</button>
+        <button class="btn btn-ghost" data-companion-skip="${note.id}" style="font-size:13px; padding:8px 14px;">Not this week</button>
+      </div>`;
+  } else if(s && note.suggestionStatus === "added"){
+    actions = `<div class="status-line">✓ Added to your reading log</div>`;
+  } else if(s && note.suggestionStatus === "skipped"){
+    actions = `<div class="status-line">Skipped</div>`;
+  }
+  return `
+    <article class="card companion-note">
+      <div class="eyebrow">Check-in · ${escapeHtml(fmtNoteDate(note.createdAt))}${note.trigger === "auto" ? " · ran automatically" : ""}</div>
+      <h2 class="serif">${escapeHtml(note.title)}</h2>
+      ${note.message ? `<p>${escapeHtml(note.message)}</p>` : ""}
+      ${note.noticed ? `<p class="noticed"><strong>What I noticed:</strong> ${escapeHtml(note.noticed)}</p>` : ""}
+      ${s ? `
+        <div class="suggest-box">
+          <div class="eyebrow" style="color:var(--accent-3-ink);">Suggested for your week</div>
+          <div><button class="chip" data-verse-ref="${escapeHtml(s.ref)}" style="font-weight:600;">${escapeHtml(s.ref)}</button></div>
+          ${s.reason ? `<div class="suggest-reason">${escapeHtml(s.reason)}</div>` : ""}
+          ${actions}
+        </div>` : ""}
+      ${note.steps && note.steps.length ? `
+        <details>
+          <summary>How your companion decided (${note.steps.length} steps)</summary>
+          <ol class="step-list">${note.steps.map(t => `<li>${escapeHtml(t)}</li>`).join("")}</ol>
+        </details>` : ""}
+    </article>`;
+}
+
+function companionLiveStepsHTML(){
+  if(!companionRun) return "";
+  if(!companionRun.steps.length) return `<li class="pending">Getting started…</li>`;
+  return companionRun.steps.map(t => `<li>${escapeHtml(t)}</li>`).join("") + `<li class="pending">Thinking…</li>`;
+}
+function renderCompanionLive(){
+  const list = document.getElementById("companionLiveSteps");
+  if(list) list.innerHTML = companionLiveStepsHTML();
+}
+
+function renderCompanion(){
+  const el = document.getElementById("sec-companion");
+  if(!el) return;
+  ensureCompanionState();
+  const notes = state.companion.notes;
+  const latest = notes[0];
+  const running = !!companionRun;
+  const v = getVocation(state.vocationId);
+
+  el.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap;">
+      <div style="min-width:0;">
+        <div class="serif" style="font-size:26px; font-weight:600;">Your companion${state.name ? ", " + escapeHtml(state.name) : ""}</div>
+        <div style="font-size:13px; color:var(--ink-soft); margin-top:4px; max-width:60ch; line-height:1.5;">Once a week your companion looks over your reading and journal, then picks a passage for the week ahead with ${escapeHtml(v.name)} in mind.</div>
+      </div>
+      <button class="btn btn-ghost" id="companionCheckInBtn" ${running ? "disabled" : ""}>Check in now</button>
+    </div>
+
+    ${running ? `
+      <div class="card" style="background:var(--accent-2-soft); border:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:10px; font-weight:600; font-size:14px; color:var(--accent-2-ink);">
+            <span class="thinking-dot" aria-hidden="true"></span> Reviewing your week
+          </div>
+          <button class="btn btn-ghost" id="companionStopBtn" style="font-size:12px; padding:6px 12px;">Stop</button>
+        </div>
+        <ol class="step-list" id="companionLiveSteps" aria-live="polite">${companionLiveStepsHTML()}</ol>
+        <div style="font-size:12px; color:var(--ink-faint); margin-top:10px;">This usually takes under a minute.</div>
+      </div>` : ""}
+
+    ${companionError ? `<div class="card" style="border-color:var(--accent);"><div style="font-size:14px;">${escapeHtml(companionError)}</div></div>` : ""}
+
+    ${companionUnavailable ? `
+      <div class="card" style="background:var(--surface-alt); border:none;">
+        <div style="font-weight:600; font-size:14px;">Your companion needs Claude</div>
+        <p style="margin:6px 0 0; font-size:13px; color:var(--ink-soft); line-height:1.55; max-width:60ch;">Check-ins run on Claude, so they work when Rooted is open inside Claude and you've allowed it to use Claude. Everything else in Rooted works as normal.</p>
+      </div>` : ""}
+
+    ${latest ? companionNoteHTML(latest, true) : (!running ? `
+      <div class="card" style="text-align:center; padding:36px 22px;">
+        <div class="serif" style="font-size:18px; font-weight:600;">No check-in yet</div>
+        <p style="font-size:13px; color:var(--ink-soft); max-width:46ch; margin:8px auto 0; line-height:1.55;">After your first week of reading, your companion checks in automatically the next time you open Rooted. You can also check in now.</p>
+      </div>` : "")}
+
+    ${notes.length > 1 ? `
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="font-weight:500; font-size:14px;">Earlier check-ins</div>
+        ${notes.slice(1).map(n => `
+          <details class="card earlier">
+            <summary><span>${escapeHtml(n.title)}</span><span class="earlier-date">${escapeHtml(fmtNoteDate(n.createdAt))}</span></summary>
+            ${n.message ? `<p style="margin:10px 0 0; font-size:13px; line-height:1.6; color:var(--ink-soft);">${escapeHtml(n.message)}</p>` : ""}
+            ${n.suggestion ? `<div style="margin-top:10px;"><button class="chip" data-verse-ref="${escapeHtml(n.suggestion.ref)}">${escapeHtml(n.suggestion.ref)}</button></div>` : ""}
+          </details>`).join("")}
+      </div>` : ""}
+
+    <div class="card" style="background:var(--surface-alt); border:none;">
+      <div class="eyebrow">What your companion can see</div>
+      <p style="margin:8px 0 0; font-size:13px; color:var(--ink-soft); line-height:1.6; max-width:64ch;">During a check-in, Claude can look at your name and vocation, your reading log, your journal and weekly challenge, your past themes, and the Bible bundled with Rooted. It decides what to look at, reads a passage before suggesting it, and saves one suggestion here. It can't change or delete anything you've written. Your data stays in this browser and is only sent to Claude during a check-in.</p>
+    </div>
+    <div class="footer">Created by Raphael Apata</div>
+  `;
+
+  const checkBtn = document.getElementById("companionCheckInBtn");
+  if(checkBtn) checkBtn.addEventListener("click", () => runCompanion("manual"));
+  const stopBtn = document.getElementById("companionStopBtn");
+  if(stopBtn) stopBtn.addEventListener("click", () => { if(companionRun) companionRun.ctl.abort(); });
+  el.querySelectorAll("[data-companion-add]").forEach(b => b.addEventListener("click", () => addSuggestionToToday(b.dataset.companionAdd)));
+  el.querySelectorAll("[data-companion-skip]").forEach(b => b.addEventListener("click", () => skipSuggestion(b.dataset.companionSkip)));
+  el.querySelectorAll("[data-verse-ref]").forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); openVerse(b.dataset.verseRef); }));
+}
+
+// A compact version of the latest suggestion, shown on the Reading Log.
+function companionLogCardHTML(){
+  const n = latestCompanionNote();
+  if(!n || !n.suggestion || n.suggestionStatus !== "open") return "";
+  return `
+    <div class="card" style="background:var(--accent-3-soft); border:none; display:flex; flex-direction:column; gap:10px;">
+      <div class="eyebrow" style="color:var(--accent-3-ink);">From your companion</div>
+      <div><button class="chip" data-verse-ref="${escapeHtml(n.suggestion.ref)}" style="font-weight:600; background:var(--surface); color:var(--accent-3-ink);">${escapeHtml(n.suggestion.ref)}</button></div>
+      ${n.suggestion.reason ? `<div class="suggest-reason">${escapeHtml(n.suggestion.reason)}</div>` : ""}
+      <div class="row-wrap">
+        <button class="btn btn-primary" data-companion-add="${n.id}" style="font-size:13px; padding:8px 14px;">Add to today's reading</button>
+        <button class="btn btn-ghost" data-go-companion style="font-size:13px; padding:8px 14px;">Read the check-in</button>
+      </div>
+    </div>`;
+}
+
+/* ============================= SECTION: RESOURCES ============================= */
+
+function renderResources(){
+  const el = document.getElementById("sec-resources");
+  const v = getVocation(state.vocationId);
+  const data = RESOURCES[v.id];
+
+  el.innerHTML = `
+    <div class="serif" style="font-size:26px; font-weight:600;">Go deeper</div>
+    <div style="font-size:13px; color:var(--ink-faint);">Additional reading and mentors for ${escapeHtml(v.name)}.</div>
+    ${data ? `
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        ${data.books.map(b=>`
+          <div class="card" style="display:flex; justify-content:space-between; align-items:center; gap:16px;">
+            <div>
+              <div style="font-weight:600; font-size:14px;">${escapeHtml(b.title)}</div>
+              <div style="font-size:12px; color:var(--ink-faint); margin:2px 0 6px;">${escapeHtml(b.author)}</div>
+              <div style="font-size:13px; color:var(--ink-soft); line-height:1.5;">${escapeHtml(b.blurb)}</div>
+            </div>
+            <a href="${b.link}" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12px; flex-shrink:0;">View book →</a>
+          </div>`).join("")}
+      </div>
+      <div>
+        <div style="font-weight:500; font-size:14px; margin-bottom:10px;">Mentors &amp; communities</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          ${data.mentors.map(m=>`
+            <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-weight:600; font-size:14px;">${escapeHtml(m.name)}</div>
+                <div style="font-size:13px; color:var(--ink-soft);">${escapeHtml(m.desc)}</div>
+              </div>
+              <a href="${m.link}" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12px;">Visit →</a>
+            </div>`).join("")}
+        </div>
+      </div>
+    ` : `
+      <div class="card" style="text-align:center; padding:40px 20px;">
+        <div style="font-weight:600; margin-bottom:6px;">Coming soon for ${escapeHtml(v.name)}</div>
+        <p style="font-size:13px; color:var(--ink-soft); max-width:420px; margin:0 auto;">We haven't put together a list for this vocation yet. Check back soon.</p>
+      </div>
+    `}
+    <div class="footer">Created by Raphael Apata</div>
+  `;
+}
+
+/* ============================= SECTION: COMMUNITY ============================= */
+
+function renderCommunityHTML(){
+  return `
+    <div class="serif" style="font-size:26px; font-weight:600;">Community</div>
+    <span class="chip" style="background:var(--accent-2-soft); color:var(--accent-2-ink); cursor:default;">Upcoming feature</span>
+    <div class="card" style="text-align:center; padding:48px 24px;">
+      <div style="font-weight:600; font-size:16px; margin-bottom:8px;">Want to share your experience?</div>
+      <p style="font-size:13px; color:var(--ink-soft); max-width:420px; margin:0 auto 18px;">Soon you'll be able to share what God is teaching you with others on the same journey — by vocation, by season, or just to encourage someone else.</p>
+      <button class="btn ${state.notifyMe ? 'btn-ghost' : 'btn-primary'}" id="notifyBtn">${state.notifyMe ? "✓ We'll let you know" : "Notify me when this launches"}</button>
+    </div>
+    <div class="footer">Created by Raphael Apata</div>
+  `;
+}
+function bindCommunityEvents(){
+  document.getElementById("notifyBtn").addEventListener("click", ()=>{
+    state.notifyMe = true;
+    saveState();
+    document.getElementById("sec-community").innerHTML = renderCommunityHTML();
+    bindCommunityEvents();
+    toast("We'll let you know!");
+  });
+}
+
+/* ============================= BOOT ============================= */
+
+function buildSections(){
+  const container = document.getElementById("sections");
+  const wrap = (id, inner) => `<div class="section ${id==='foundation'?'active':''} ${id==='log'?'wide':''}" id="sec-${id}">${inner}</div>`;
+  container.innerHTML =
+    wrap("foundation", renderFoundationHTML()) +
+    wrap("companion", "") +
+    wrap("log", renderLogHTML()) +
+    wrap("theme", "") +
+    wrap("reflect", "") +
+    wrap("growth", "") +
+    wrap("resources", "") +
+    wrap("community", renderCommunityHTML());
+}
+
+function init(){
+  renderNav();
+  buildSections();
+  bindFoundationEvents();
+  bindLogEvents();
+  bindCommunityEvents();
+  updateSidebarIdentity();
+  document.getElementById("hamburgerBtn").addEventListener("click", openSidebar);
+  document.getElementById("sidebarBackdrop").addEventListener("click", closeSidebar);
+  maybeAutoRunCompanion();
+}
+init();
+</script>
+
+</body></html>
